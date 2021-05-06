@@ -1,0 +1,1936 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+    \usepackage{iftex}
+    \ifPDFTeX
+    	\usepackage[T1]{fontenc}
+    	\usepackage{mathpazo}
+    \else
+    	\usepackage{fontspec}
+    \fi
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{project}
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb. 
+    \makeatletter
+        \newbox\Wrappedcontinuationbox 
+        \newbox\Wrappedvisiblespacebox 
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}} 
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}} 
+        \newcommand*\Wrappedcontinuationindent {3ex } 
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox} 
+        % Take advantage of the already applied Pygments mark-up to insert 
+        % potential linebreaks for TeX processing. 
+        %        {, <, #, %, $, ' and ": go to next line. 
+        %        _, }, ^, &, >, - and ~: stay at end of broken line. 
+        % Use of \textquotesingle for straight quote. 
+        \newcommand*\Wrappedbreaksatspecials {% 
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}% 
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}% 
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}% 
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}% 
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}% 
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}% 
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}% 
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}% 
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}% 
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}% 
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}% 
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}% 
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}% 
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}% 
+        } 
+        % Some characters . , ; ? ! / are not pygmentized. 
+        % This macro makes them "active" and they will insert potential linebreaks 
+        \newcommand*\Wrappedbreaksatpunct {% 
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}% 
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}% 
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}% 
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}% 
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}% 
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}% 
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}% 
+            \catcode`\.\active
+            \catcode`\,\active 
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active 
+            \lccode`\~`\~ 	
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+        
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active 	
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+    
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    %\maketitle
+    
+    
+
+    
+    \hypertarget{tek4050-v21---project-assignment}{%
+\section*{TEK4050 V21 - PROJECT
+ASSIGNMENT}\label{tek4050-v21---project-assignment}}
+
+\hypertarget{olav-fuxf8nstelien-2021-05-08}{%
+\subsection*{Olav Fonstelien
+2021-05-08}\label{olav-fuxf8nstelien-2021-05-08}}
+
+    \hypertarget{introduction}{%
+\section*{Introduction}\label{introduction}}
+
+In this project we will investigate the Kalman filter applied on a
+simple physical model.
+
+    We will simulate a very simple system consisting of a cart driven by a
+DC motor. The states of the system are the cart's \emph{position}
+\(x_1\), its \emph{velocity} \(x_2\), and the applied \emph{armature
+current} \(x_3\), such that the state vector is given by \[
+\mathbf{x} = 
+\begin{bmatrix}
+x_1 \\ x_2 \\ x_3
+\end{bmatrix}.
+\]
+
+To model this system, we must establish the relationship between the
+state variables. For the position and velocity, the relationship is
+simply \[
+\dot{x}_1 = x_2.
+\]
+
+For the velocity and the armature current, we begin by investigating the
+forces acting on the cart. They are the driving force \(F_M\) developed
+by the electric motor, and the opposing friction \(F_r\). In sum, the
+cart's acceleration is given by \[
+\dot{x}_2 = \frac{F_M - F_r}{m},
+\] where \(m\) is the mass of the cart. The motor force is proportional
+to the torque, \(T_M\), and the torque developed by DC motor is again
+proportional to the applied armature current, such that \[
+F_M = k_M T_M = k_M'x_3.
+\] Here, \(k_M\) contains all factors relating to the mechanical
+transmission of power from the rotor to the surface which the cart's
+wheels are rubbing against, while \(k_M'\) in addition to that accounts
+for the electromagnetics, such as flux density, rotor area and physical
+constants. In the case we are studying here, the friction increases
+linearly with velocity; \[
+F_r = k_r x_2,
+\] where \(k_r\) is the friction constant. This kind of friction is
+typical for an object moving slowly through a viscous without creating
+turbulence. The resulting relationship between velocity and armature
+current is \[
+\dot{x}_2 = \frac{-k_r}{m}x_2 + \frac{k_M'}{m}x_3.
+\]
+
+Moving on to the armature current equation, we note that we can only
+control the cart's position and velocity through current. A step change
+in setpoint from a steady-state \(u^-\) to \(u^+\) at time \(t=0\) gives
+an exponential response in the armature current due to electrical
+impedance, such that \[
+x_3 = u^- + \big( 1 - e^{-t/\tau_a} \big) \big( u^+ - u^- \big), \quad t \ge 0.
+\] Time derivation gives us \[
+\dot{x}_3 = \frac{1}{\tau_a} \bigg[ \big( u^+ - u^- \big)e^{-t/\tau_a} \bigg],
+\] and rearranging the equation for \(x_3\) above gives us that \[
+x_3 = u^+ - \bigg[ \big( u^+ - u^- \big)e^{-t/\tau_a} \bigg] = u^+ - \tau_a \dot{x}_3,
+\] which results in \[
+\dot{x}_3 = \frac{-1}{\tau_a} x_3 + \frac{1}{\tau_a} u^+.
+\]
+
+Finally, the system equiation becomes \[
+\dot{\mathbf{x}} = \mathbf{F}\mathbf{x} + \mathbf{L}u
+\quad \Rightarrow \quad
+\begin{bmatrix}
+\dot{x}_1 \\ \dot{x}_2 \\ \dot{x}_3
+\end{bmatrix}
+=
+\begin{bmatrix}
+0 & 1 & 0 \\
+0 & \frac{-k_r}{m} & \frac{k_M'}{m} \\
+0 & 0 & \frac{-1}{\tau_a}
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\ x_2 \\ x_3
+\end{bmatrix}
++
+\begin{bmatrix}
+0 \\ 0 \\ \frac{1}{\tau_a}
+\end{bmatrix}
+u.
+\]
+
+    \hypertarget{simulation-model-mathcalms}{%
+\section*{\texorpdfstring{1 Simulation Model
+\(\mathcal{M^S}\)}{1 Simulation Model \textbackslash mathcal\{M\^{}S\}}}\label{simulation-model-mathcalms}}
+
+    In the assignment, we are given the following parameters to work with:
+\[
+\frac{k_r}{m} = \frac{k_M'}{m} = \frac{1}{T_2}, \quad \text{and} \quad \tau_a = T_3.
+\] Looking at the second system equation, for velocity \(x_2\), we see
+that it has similar shape as the armature current equation. The equality
+\(k_r = k_M'\) thus means that the value of \(x_2, x_3\) and \(u\) are
+equal in the steady state. Also, we should expect a similar exponential
+response in \(x_2\) to a step change in \(x_3\) as we saw for the
+armature current equation above, only with a time constant \(T_2\)
+instead of \(T_3\). However, since change in \(x_2\) is a reaction to
+change in \(x_3\), and \(x_3\) is a reaction to (instant) change in
+\(u\), the response in \(x_2\) will be slower than what we should expect
+from its time constant alone.
+
+    The assignment also provides us with a noise term in the system
+equation, affecting only armature current, such that the equation gets
+the form \[
+\dot{\mathbf{x}} = \mathbf{F}\mathbf{x} + \mathbf{L}u + \mathbf{G}v
+\quad \Rightarrow \quad
+\begin{bmatrix}
+\dot{x}_1 \\ \dot{x}_2 \\ \dot{x}_3
+\end{bmatrix}
+=
+\begin{bmatrix}
+0 & 1 & 0 \\
+0 & \frac{-1}{T_2} & \frac{1}{T_2} \\
+0 & 0 & \frac{-1}{T_3}
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\ x_2 \\ x_3
+\end{bmatrix}
++
+\begin{bmatrix}
+0 \\ 0 \\ \frac{1}{T_3}
+\end{bmatrix}
+u
++
+\begin{bmatrix}
+0 \\ 0 \\ 1
+\end{bmatrix}
+v, \quad v \sim \mathcal{N}(\mathbf{0}, \tilde{\mathbf{Q}} \delta(t-\tau)).
+\]
+
+    We will assume initial state estimate
+\(\hat{\mathbf{x}}_0 = \mathbf{0}\), such that the initial estimate
+error covariance becomes \[
+\mathbf{x}_0 = \hat{\mathbf{e}}_0 \sim \mathcal{N}(\mathbf{0}, \hat{\mathbf{P}}_0).
+\] Later, when we discuss the Kalman filter, we will assume measurement
+of position only. The measurement equation then becomes \[
+\mathbf{z}_k = \mathbf{Hx} + \mathbf{w}_k
+\quad \Rightarrow \quad
+z_k = 
+\begin{bmatrix}
+1 & 0 & 0
+\end{bmatrix}
+\mathbf{x}
++ w_k, \quad w_k \sim \mathcal{N}(\mathbf{0}, \mathbf{R} \delta_{kl}).
+\]
+
+    Having established the system equation and roughly what to expect in
+terms of changes in the control parameter \(u\), we are ready to run
+simulations. But, before we start, let's set up our Python environment:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{} Setting up environment}
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+\PY{k+kn}{from} \PY{n+nn}{numpy} \PY{k+kn}{import} \PY{n}{sqrt}
+\PY{k+kn}{from} \PY{n+nn}{scipy}\PY{n+nn}{.}\PY{n+nn}{linalg} \PY{k+kn}{import} \PY{n}{expm}\PY{p}{,} \PY{n}{inv}\PY{p}{,} \PY{n}{norm}\PY{p}{,} \PY{n}{cholesky} \PY{k}{as} \PY{n}{chol}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+\PY{k+kn}{from} \PY{n+nn}{tqdm} \PY{k+kn}{import} \PY{n}{tqdm}
+
+\PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{} Setting plotting style}
+\PY{n}{plt}\PY{o}{.}\PY{n}{style}\PY{o}{.}\PY{n}{use}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{fivethirtyeight}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+\PY{n}{COLORS} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{rcParams}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{axes.prop\PYZus{}cycle}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{by\PYZus{}key}\PY{p}{(}\PY{p}{)}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{color}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+
+\PY{c+c1}{\PYZsh{}\PYZsh{}\PYZsh{} Seed the RNG}
+\PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{seed}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Parameters for the simulation model are listed below.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Simulation parameters}
+\PY{n}{t0}\PY{p}{,} \PY{n}{tf} \PY{o}{=} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{100}
+\PY{n}{dt} \PY{o}{=} \PY{o}{.}\PY{l+m+mi}{01}
+
+\PY{c+c1}{\PYZsh{} System parameters}
+\PY{n}{T2}\PY{p}{,} \PY{n}{T3} \PY{o}{=} \PY{l+m+mi}{5}\PY{p}{,} \PY{l+m+mi}{1}
+\PY{n}{Q} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{eye}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{)}\PY{o}{*}\PY{l+m+mi}{2}\PY{o}{*}\PY{o}{.}\PY{l+m+mi}{1}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}
+\PY{n}{F} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}
+              \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{o}{/}\PY{n}{T2}\PY{p}{,} \PY{l+m+mi}{1}\PY{o}{/}\PY{n}{T2}\PY{p}{]}\PY{p}{,}
+              \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{o}{/}\PY{n}{T3}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\PY{n}{L} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}
+              \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}
+              \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{o}{/}\PY{n}{T3}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\PY{n}{G} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}
+              \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}
+              \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\PY{n}{P0} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{diag}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{o}{.}\PY{l+m+mi}{1}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}\PY{p}{,} \PY{o}{.}\PY{l+m+mi}{1}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Measurement parameters}
+\PY{n}{R} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{eye}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{)}\PY{o}{*}\PY{l+m+mi}{1}
+\PY{n}{H} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}
+              \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}
+              \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{discretization}{%
+\section*{2 Discretization}\label{discretization}}
+
+    To implement the system equation in a computer program we need first to
+discretize it into the form \[
+\mathbf{x}_{x+1} = \mathbf{\Phi}\mathbf{x}_k + \mathbf{\Lambda}\mathbf{u}_k + \mathbf{\Gamma}\mathbf{v}_k, \quad \mathbf{v}_k \sim \mathcal{N}(0, \mathbf{Q} \delta_{kl}).
+\] Here, \(\mathbf{u}_k = [u_k, 0, 0]^T\) and
+\(\mathbf{v}_k = [0, 0, v_k]^T\). We also point out that
+\(\tilde{\mathbf{Q}}\) in the continuous equation is the process noise
+power spectral density matrix -- which is a continuous function in
+\(\mathbb{R}^{n \times n}\) -- and that the corresponding factor in the
+discrete equation \(\mathbf{Q}\) is the discrete process noise
+autocorrelation matrix.
+
+The discrete system matrices \(\mathbf{\Phi}, \mathbf{\Lambda}\) are
+found by first re-writing the deterministic part of the continuous
+system equation as \[
+\dot{\tilde{\mathbf{x}}} = \tilde{\mathbf{F}}\tilde{\mathbf{x}} = 
+\begin{bmatrix}
+\mathbf{F} & \mathbf{L} \\
+\mathbf{0} & \mathbf{0}
+\end{bmatrix}
+\begin{bmatrix}
+\mathbf{x} \\
+\mathbf{u}
+\end{bmatrix}.
+\] Then, the corresponding deterministic discrete equation becomes \[
+\tilde{\mathbf{x}}_{k+1} = \tilde{\mathbf{\Phi}}\tilde{\mathbf{x}}_k, 
+\quad \text{where} \quad 
+\tilde{\mathbf{\Phi}} = e^{\tilde{\mathbf{F}} \Delta t} =
+\begin{bmatrix}
+\mathbf{\Phi} & \mathbf{\Lambda} \\
+\mathbf{0} & \mathbf{I}
+\end{bmatrix},
+\] and we assume that \(u\) is constant over the time interval
+\([t_k, t_k + \Delta t]\). An implementation follows below.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{c2d\PYZus{}determnistic}\PY{p}{(}\PY{n}{F}\PY{p}{,} \PY{n}{L}\PY{p}{,} \PY{n}{dt}\PY{p}{)}\PY{p}{:}
+    \PY{l+s+sd}{\PYZsq{}\PYZsq{}\PYZsq{}Converts the continuous process equation matrices F, L into discrete matrices Fi, La with time step dt\PYZsq{}\PYZsq{}\PYZsq{}}
+    \PY{n}{n}\PY{p}{,} \PY{n}{mF} \PY{o}{=} \PY{n}{F}\PY{o}{.}\PY{n}{shape}
+    \PY{n}{\PYZus{}}\PY{p}{,} \PY{n}{mL} \PY{o}{=} \PY{n}{L}\PY{o}{.}\PY{n}{shape}
+    \PY{n}{Z} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{mF}\PY{o}{+}\PY{n}{mL}\PY{o}{\PYZhy{}}\PY{n}{n}\PY{p}{,} \PY{n}{mF}\PY{o}{+}\PY{n}{mL}\PY{p}{)}\PY{p}{)}
+    \PY{n}{F1} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{vstack}\PY{p}{(}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{hstack}\PY{p}{(}\PY{p}{(}\PY{n}{F}\PY{p}{,} \PY{n}{L}\PY{p}{)}\PY{p}{)}\PY{p}{,}
+                   \PY{n}{Z}\PY{p}{)}\PY{p}{)}
+    \PY{n}{Fi1} \PY{o}{=} \PY{n}{expm}\PY{p}{(}\PY{n}{F1}\PY{o}{*}\PY{n}{dt}\PY{p}{)}
+    \PY{n}{Fi} \PY{o}{=} \PY{n}{Fi1}\PY{p}{[}\PY{p}{:}\PY{n}{n}\PY{p}{,} \PY{p}{:}\PY{n}{mF}\PY{p}{]}  \PY{c+c1}{\PYZsh{} Upper left}
+    \PY{n}{La} \PY{o}{=} \PY{n}{Fi1}\PY{p}{[}\PY{p}{:}\PY{n}{n}\PY{p}{,} \PY{n}{mF}\PY{p}{:}\PY{p}{]}  \PY{c+c1}{\PYZsh{} Upper right}
+    
+    \PY{k}{return} \PY{p}{(}\PY{n}{Fi}\PY{p}{,} \PY{n}{La}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Running this with the input defined in the assignment we ge get the
+result printed below. We note that the discretized control input matrix
+\(\Lambda\) does not have all-zeros in the first and second rows, for
+the position and velocity equations. The reason for this is that we
+account for the effect on position and velocity in the time interval
+\([t_k, t_k + \Delta t]\), which follows from the matrix superposition
+integral: \[
+\mathbf{\Lambda}\mathbf{u}_k = \int_{t_k}^{t_k + \Delta t} \mathbf{\Phi}\mathbf{L}\mathbf{u}(\tau) d\tau .
+\]
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Deterministic system discrete matrices}
+\PY{n}{Fi}\PY{p}{,} \PY{n}{La} \PY{o}{=} \PY{n}{c2d\PYZus{}determnistic}\PY{p}{(}\PY{n}{F}\PY{p}{,} \PY{n}{L}\PY{p}{,} \PY{n}{dt}\PY{p}{)}
+\PY{n}{Fi}\PY{p}{,} \PY{n}{La}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+(array([[1.00000000e+00, 9.99000666e-03, 9.96010313e-06],
+        [0.00000000e+00, 9.98001999e-01, 1.98804123e-03],
+        [0.00000000e+00, 0.00000000e+00, 9.90049834e-01]]),
+ array([[0.00000000e+00, 0.00000000e+00, 3.32335397e-08],
+        [0.00000000e+00, 0.00000000e+00, 9.96010313e-06],
+        [0.00000000e+00, 0.00000000e+00, 9.95016625e-03]]))
+\end{Verbatim}
+\end{tcolorbox}
+        
+    Moving on, we find \(\mathbf{\Gamma}\) in a similar way as above by
+considering only the stochastic part of the continuous system equation,
+such that \[
+\dot{\tilde{\tilde{\mathbf{x}}}} = \tilde{\tilde{\mathbf{F}}} \tilde{\tilde{\mathbf{x}}} = 
+\begin{bmatrix}
+\mathbf{F} & \mathbf{G}\tilde{\mathbf{Q}}\mathbf{G}^T \\
+\mathbf{0} & -\mathbf{F}^T
+\end{bmatrix}
+\begin{bmatrix}
+\mathbf{x} \\
+\mathbf{z}'
+\end{bmatrix},
+\] This is the solution of the \emph{linear variance equation}
+(\emph{Gelb} pp.~77-78); \[
+\dot{\mathbf{P}} = \mathbf{FP} + \mathbf{FP}^T - \mathbf{PH}^T \mathbf{R}^{-1} \mathbf{HP} + \mathbf{G}\tilde{\mathbf{Q}}\mathbf{G}^T,
+\] which has the shape of the Riccati equation, and by which
+\(\mathbf{z}'\) in the augmented state vector is defined such that \[
+\mathbf{P}\mathbf{z}' = \mathbf{x}.
+\] We then get that the stochastic part of the system equation can be
+discretized as \[
+\tilde{\tilde{\mathbf{x}}}_{k+1} = \tilde{\tilde{\mathbf{\Phi}}} \tilde{\tilde{\mathbf{x}}}_k, 
+\quad \text{where} \quad 
+\tilde{\tilde{\mathbf{\Phi}}} = e^{\tilde{\tilde{\mathbf{F}}} \Delta t} =
+\begin{bmatrix}
+\tilde{\tilde{\mathbf{\Phi}}}_{11} & \tilde{\tilde{\mathbf{\Phi}}}_{12} \\
+\mathbf{0} & \tilde{\tilde{\mathbf{\Phi}}}_{22}
+\end{bmatrix},
+\] where \[
+\mathbf{\Phi} = \tilde{\tilde{\mathbf{\Phi}}}_{11}, \quad \text{and} \quad \mathbf{\Gamma}\mathbf{Q}\mathbf{\Gamma}^T = \tilde{\tilde{\mathbf{\Phi}}}_{12} \tilde{\tilde{\mathbf{\Phi}}}_{22}^{-1}.
+\] By letting \(\mathbf{Q} = \mathbf{I}\), and hence scaling
+\(\mathbf{\Gamma}\) correspondingly, we find \(\mathbf{\Gamma}\) by the
+upper Cholesky factorization \[
+\mathbf{\Gamma} = \mathrm{chol}_u \bigg[ \tilde{\tilde{\mathbf{\Phi}}}_{12} \tilde{\tilde{\mathbf{\Phi}}}_{22}^{-1} \bigg].
+\] An implementation of this is given here:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{c2d\PYZus{}stochastic}\PY{p}{(}\PY{n}{F}\PY{p}{,} \PY{n}{L}\PY{p}{,} \PY{n}{G}\PY{p}{,} \PY{n}{Q}\PY{p}{,} \PY{n}{dt}\PY{p}{)}\PY{p}{:}
+    \PY{l+s+sd}{\PYZsq{}\PYZsq{}\PYZsq{}Converts the continuous process equation matrices F, L, G, Q into discrete matrices Fi, La, Ga with time step dt\PYZsq{}\PYZsq{}\PYZsq{}}
+    \PY{n}{p} \PY{o}{=} \PY{n}{F}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+    \PY{n}{GQGT} \PY{o}{=} \PY{n}{G}\PY{n+nd}{@Q}\PY{n+nd}{@G}\PY{o}{.}\PY{n}{T}
+    \PY{n}{F2} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{vstack}\PY{p}{(}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{hstack}\PY{p}{(}\PY{p}{(}\PY{n}{F}\PY{p}{,} \PY{n}{GQGT}\PY{p}{)}\PY{p}{)}\PY{p}{,}
+                    \PY{n}{np}\PY{o}{.}\PY{n}{hstack}\PY{p}{(}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{n}{F}\PY{o}{.}\PY{n}{shape}\PY{p}{)}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{n}{F}\PY{o}{.}\PY{n}{T}\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+    \PY{n}{Fi2} \PY{o}{=} \PY{n}{expm}\PY{p}{(}\PY{n}{F2}\PY{o}{*}\PY{n}{dt}\PY{p}{)}
+    \PY{n}{Fi12} \PY{o}{=} \PY{n}{Fi2}\PY{p}{[}\PY{p}{:}\PY{n}{p}\PY{p}{,} \PY{n}{p}\PY{p}{:}\PY{p}{]}  \PY{c+c1}{\PYZsh{} Upper right}
+    \PY{n}{Fi22} \PY{o}{=} \PY{n}{Fi2}\PY{p}{[}\PY{n}{p}\PY{p}{:}\PY{p}{,} \PY{n}{p}\PY{p}{:}\PY{p}{]}  \PY{c+c1}{\PYZsh{} Lower right}
+    \PY{n}{Ga} \PY{o}{=} \PY{n}{chol}\PY{p}{(}\PY{n}{Fi12} \PY{o}{@} \PY{n}{inv}\PY{p}{(}\PY{n}{Fi22}\PY{p}{)}\PY{p}{,} \PY{n}{lower}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+    \PY{n}{Fi}\PY{p}{,} \PY{n}{La} \PY{o}{=} \PY{n}{c2d\PYZus{}determnistic}\PY{p}{(}\PY{n}{F}\PY{p}{,} \PY{n}{L}\PY{p}{,} \PY{n}{dt}\PY{p}{)}
+    
+    \PY{k}{return} \PY{p}{(}\PY{n}{Fi}\PY{p}{,} \PY{n}{La}\PY{p}{,} \PY{n}{Ga}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Running this again with the parameters defined in the assignment we get
+the result shown below. We note again that the contribution from process
+noise is not restricted to armature current, and that this again results
+from the matrix superposition integral applied on the noise: \[
+\mathbf{\Gamma}\mathbf{v}_k = \int_{t_k}^{t_k + \Delta t} \mathbf{\Phi}\mathbf{G}\mathbf{v}(\tau) d\tau .
+\]
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Stochastic system discrete matrices}
+\PY{n}{Fi}\PY{p}{,} \PY{n}{La}\PY{p}{,} \PY{n}{Ga} \PY{o}{=} \PY{n}{c2d\PYZus{}stochastic}\PY{p}{(}\PY{n}{F}\PY{p}{,} \PY{n}{L}\PY{p}{,} \PY{n}{G}\PY{p}{,} \PY{n}{Q}\PY{p}{,} \PY{n}{dt}\PY{p}{)}
+\PY{n}{Fi}\PY{p}{,} \PY{n}{La}\PY{p}{,} \PY{n}{Ga}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+(array([[1.00000000e+00, 9.99000666e-03, 9.96010313e-06],
+        [0.00000000e+00, 9.98001999e-01, 1.98804123e-03],
+        [0.00000000e+00, 0.00000000e+00, 9.90049834e-01]]),
+ array([[0.00000000e+00, 0.00000000e+00, 3.32335397e-08],
+        [0.00000000e+00, 0.00000000e+00, 9.96010313e-06],
+        [0.00000000e+00, 0.00000000e+00, 9.95016625e-03]]),
+ array([[6.30352113e-08, 1.57378158e-05, 1.04656845e-02],
+        [0.00000000e+00, 4.07432794e-06, 8.14187293e-03],
+        [0.00000000e+00, 0.00000000e+00, 4.71090429e-03]]))
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \hypertarget{simulation-of-stochastic-system}{%
+\section*{3 Simulation of Stochastic
+System}\label{simulation-of-stochastic-system}}
+
+    We will now simulate the system, first as a purely deterministic
+process, and then as a stochastic process (i.e.~including process
+noise). We define two methods, one which runs a simulation of the
+deterministic process, and one which runs a simulation of a stochastic
+process:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{run\PYZus{}deterministic}\PY{p}{(}\PY{n}{u}\PY{p}{,} \PY{n}{Fi}\PY{p}{,} \PY{n}{La}\PY{p}{)}\PY{p}{:}
+    \PY{l+s+sd}{\PYZsq{}\PYZsq{}\PYZsq{}Runs simulation of deterministic system Fi, La with control vector u.\PYZsq{}\PYZsq{}\PYZsq{}}
+    \PY{n}{\PYZus{}}\PY{p}{,} \PY{n}{n} \PY{o}{=} \PY{n}{u}\PY{o}{.}\PY{n}{shape}
+    \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{n}{u}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+    
+    \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+        \PY{n}{x}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{n}{k}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{np}\PY{o}{.}\PY{n}{newaxis}\PY{p}{]} \PY{o}{=} \PY{n}{Fi}\PY{n+nd}{@x}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{n}{k}\PY{p}{,}\PY{n}{np}\PY{o}{.}\PY{n}{newaxis}\PY{p}{]} \PY{o}{+} \PY{n}{La}\PY{n+nd}{@u}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{n}{k}\PY{p}{,}\PY{n}{np}\PY{o}{.}\PY{n}{newaxis}\PY{p}{]}
+    
+    \PY{k}{return} \PY{n}{x}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{run\PYZus{}stochastic}\PY{p}{(}\PY{n}{u}\PY{p}{,} \PY{n}{v}\PY{p}{,} \PY{n}{Fi}\PY{p}{,} \PY{n}{La}\PY{p}{,} \PY{n}{Ga}\PY{p}{)}\PY{p}{:}
+    \PY{l+s+sd}{\PYZsq{}\PYZsq{}\PYZsq{}Runs simulation of stochastic system Fi, La, Ga with control vector u and noise vector v.\PYZsq{}\PYZsq{}\PYZsq{}}
+    \PY{n}{\PYZus{}}\PY{p}{,} \PY{n}{n} \PY{o}{=} \PY{n}{u}\PY{o}{.}\PY{n}{shape}
+    \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{n}{u}\PY{o}{.}\PY{n}{shape}\PY{p}{)}
+    
+    \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+        \PY{n}{x}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{n}{k}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{np}\PY{o}{.}\PY{n}{newaxis}\PY{p}{]} \PY{o}{=} \PY{n}{Fi}\PY{n+nd}{@x}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{n}{k}\PY{p}{,}\PY{n}{np}\PY{o}{.}\PY{n}{newaxis}\PY{p}{]} \PY{o}{+} \PY{n}{La}\PY{n+nd}{@u}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{n}{k}\PY{p}{,}\PY{n}{np}\PY{o}{.}\PY{n}{newaxis}\PY{p}{]} \PY{o}{+} \PY{n}{Ga}\PY{n+nd}{@v}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{n}{k}\PY{p}{,}\PY{n}{np}\PY{o}{.}\PY{n}{newaxis}\PY{p}{]}
+    
+    \PY{k}{return} \PY{n}{x}
+\end{Verbatim}
+\end{tcolorbox}
+
+    In the assignment, we are given a fixed control input \(u = 1\), such
+that we can define the control vector \texttt{u} as \ldots{}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Control input u}
+\PY{n}{t} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{l+m+mf}{0.}\PY{p}{,} \PY{n}{tf}\PY{o}{+}\PY{n}{dt}\PY{p}{,} \PY{n}{dt}\PY{p}{)}
+\PY{n}{n} \PY{o}{=} \PY{n}{t}\PY{o}{.}\PY{n}{size}
+\PY{n}{u} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{,}\PY{n}{n}\PY{p}{)}\PY{p}{)}
+\PY{n}{u}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{1}
+\PY{n}{u}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+array([[0., 0., 0., {\ldots}, 0., 0., 0.],
+       [0., 0., 0., {\ldots}, 0., 0., 0.],
+       [1., 1., 1., {\ldots}, 1., 1., 1.]])
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \ldots{} and run the deterministic process simulation which is stored in
+the vector \texttt{xd}:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Deterministic process simulation}
+\PY{n}{Fi}\PY{p}{,} \PY{n}{La} \PY{o}{=} \PY{n}{c2d\PYZus{}determnistic}\PY{p}{(}\PY{n}{F}\PY{p}{,} \PY{n}{L}\PY{p}{,} \PY{n}{dt}\PY{p}{)}
+\PY{n}{xd} \PY{o}{=} \PY{n}{run\PYZus{}deterministic}\PY{p}{(}\PY{n}{u}\PY{p}{,} \PY{n}{Fi}\PY{p}{,} \PY{n}{La}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    For the stochastic process we define in addition a noise vector
+\texttt{v} and run the stochastic process simulation which we store in
+vector \texttt{xs}:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Stochastic process simulation}
+\PY{n}{v} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{,}\PY{n}{n}\PY{p}{)}\PY{p}{)}
+\PY{n}{v}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{randn}\PY{p}{(}\PY{n}{n}\PY{p}{)}
+\PY{n}{Fi}\PY{p}{,} \PY{n}{La}\PY{p}{,} \PY{n}{Ga} \PY{o}{=} \PY{n}{c2d\PYZus{}stochastic}\PY{p}{(}\PY{n}{F}\PY{p}{,} \PY{n}{L}\PY{p}{,} \PY{n}{G}\PY{p}{,} \PY{n}{Q}\PY{p}{,} \PY{n}{dt}\PY{p}{)}
+\PY{n}{xs} \PY{o}{=} \PY{n}{run\PYZus{}stochastic}\PY{p}{(}\PY{n}{u}\PY{p}{,} \PY{n}{v}\PY{p}{,} \PY{n}{Fi}\PY{p}{,} \PY{n}{La}\PY{p}{,} \PY{n}{Ga}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Below we see a plot of each of the processes, showing the armature
+current control input \(u(k)\), the deterministic velocity estimate
+\(\hat{x}_2^{(d)}(k)\), and the stochastic estimate
+\(\hat{x}_2^{(s)}(k)\). The velocity transient response to the step
+change in \(u\) is eponential, as we came to expect from the discussion
+above, and in the deterministic curve we see that it is slighly damped
+due to the damped reponse in armature current \(x_3\). Further, and also
+as expected, we see that there is a 1-to-1 relationship bewtween the
+control input and the velocity in the steady state, except of course for
+the noise effect in the stochastic case.
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_31_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \hypertarget{optimal-kalman-filter}{%
+\section*{4 Optimal Kalman Filter}\label{optimal-kalman-filter}}
+
+    We will now implement the discrete Kalman filter for the cart model. The
+discrete Kalman filter is an algorithm running in a loop, updating an
+a-priori estimate of the state \(\bar{\mathbf{x}}_k\) with an
+a-posteriori estimate \(\hat{\mathbf{x}}_k\) after taking the noisy
+measurement \(\mathbf{z}_k\) into account. Depending on the statistics
+of the system and measurement, we assign a certain weight to the
+measurement, such that the updated estimate becomes \[
+\hat{\mathbf{x}}_k = \bar{\mathbf{x}}_k + \mathbf{K}_k (\mathbf{z}_k - \mathbf{H}\bar{\mathbf{x}}_k).
+\] The weight \(\mathbf{K}_k\) is the Kalman gain, which we seek to
+optimize such that it minimizes the expected state estimate error
+\(\hat{\mathbf{e}}_k = \mathbf{x}_k - \hat{\mathbf{x}}_k\) in the
+minimum-variance sense. The general formulation for error variance is
+given by the covariance matrix; \[
+\hat{\mathbf{P}}_k = \mathbb{E} \big[ \hat{\mathbf{e}}_k \hat{\mathbf{e}}_k^T \big] = (\mathbf{I} - \mathbf{K}_k \mathbf{H}) \bar{\mathbf{P}}_k (\mathbf{I} - \mathbf{K}_k \mathbf{H})^T + \mathbf{K}_k \mathbf{R} \mathbf{K}_k^T
+\] where \(\bar{\mathbf{P}}_k\) is the covariance matrix of the
+``a-priori'' estimate error. To optimize the Kalman gain thus means
+that, at each time step \(k\), we want to find \({\mathbf{K}_k}\) such
+that it minimizes \(\mathrm{trace} \hspace{1pt} \hat{\mathbf{P}}_k\).
+More formally, we can write \[
+\mathrm{argmin}_{\mathbf{K}_k} \mathrm{trace} \hspace{1pt} \hat{\mathbf{P}}_k
+\quad \Rightarrow \quad \frac{d(\mathrm{trace} \hspace{1pt} \hat{\mathbf{P}}_k)}{d {\mathbf{K}_k}} = 0.
+\] Solving this, we find the update equation for the optimal Kalman gain
+\[ 
+\mathbf{K}_k = \bar{\mathbf{P}}_k \mathbf{H}^T (\mathbf{H} \bar{\mathbf{P}}_k \mathbf{H}^T + \mathbf{R})^{-1}.
+\]
+
+Plugging the optimal \(\mathbf{K}_k\) into the equation for
+\(\hat{\mathbf{P}}_k\) above, we get the simpler formulation \[
+\hat{\mathbf{P}}_k = (\mathbf{I} - \mathbf{K}_k \mathbf{H}) \bar{\mathbf{P}}_k.
+\] We then use \(\hat{\mathbf{P}}_k\) to recursively calculate the
+next-step a-priori covariance as \[
+\bar{\mathbf{P}}_{k+1} = \mathbf{\Phi} \hat{\mathbf{P}}_k \mathbf{\Phi}^T + \mathbf{\Gamma} \mathbf{Q} \mathbf{\Gamma}^T
+\] before we repeat the process. We mention here that the Kalman gain
+and state error covariance can be calculated without actually taking any
+measurements of the process, as long as we know its (possibly varying)
+statistics. We will use this when we set up the error budget in part 6
+further down, but, in our application here we will also take
+measurements. We use the deterministic system equation from part 2 above
+to give us the a-priori state estimate: \[
+\bar{\mathbf{x}}_{k+1} = \mathbf{\Phi} \hat{\mathbf{x}}_k + \mathbf{\Lambda} \mathbf{u}_k.
+\]
+
+\textbf{Kalman filter algorithm:}
+
+\emph{Input}: Measurements \(\mathbf{z}_k\); control input
+\(\mathbf{u}_k\); initial state estimate \(\mathbf{x}_0\)~with
+covariance \(\mathbf{P}_0\) 1. Initialize state
+\(\bar{\mathbf{x}}_0 = \mathbf{x}_0\), covariance
+\(\bar{\mathbf{P}}_0 = \mathbf{P}_0\), time variable \(k = 0\). Then; 2.
+Update Kalman gain:
+\(\mathbf{K}_k \leftarrow \bar{\mathbf{P}}_k \mathbf{H}^T (\mathbf{H} \bar{\mathbf{P}}_k \mathbf{H}^T + \mathbf{R})^{-1}\)
+3. Update a-posteriori state estimate:
+\(\hat{\mathbf{x}}_k \leftarrow \bar{\mathbf{x}}_k + \mathbf{K}_k (\mathbf{z}_k - \mathbf{H}\bar{\mathbf{x}}_k)\)
+4. Update a-posteriori estimate covariance:
+\(\hat{\mathbf{P}}_k \leftarrow (\mathbf{I} - \mathbf{K}_k \mathbf{H}) \bar{\mathbf{P}}_k\)
+5. Update a-priori state estimate:
+\(\bar{\mathbf{x}}_{k+1} \leftarrow \mathbf{\Phi} \hat{\mathbf{x}}_k + \mathbf{\Lambda} \mathbf{u}_k\)
+6. Update a-priori estimate covariance:
+\(\bar{\mathbf{P}}_{k+1} \leftarrow \mathbf{\Phi} \hat{\mathbf{P}}_k \mathbf{\Phi}^T + \mathbf{\Gamma} \mathbf{Q} \mathbf{\Gamma}^T\)
+7. Update time variable: \(k \leftarrow k + 1\) 8. Repeat from 2. while
+\(k < K\)
+
+An implemenation of the Kalman filter algorithm which filters the
+measurements \texttt{z} with control input \texttt{u} follows below. The
+\texttt{mi} parameter, for measurement interval, lets us define a sample
+frequency for the process simulation. Note that this implementation
+could very easily have been made much more efficient by pre-calculating
+some of the matrix products, but we skip that for clarity.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{kalman\PYZus{}filter}\PY{p}{(}\PY{n}{z}\PY{p}{,} \PY{n}{u}\PY{p}{,} \PY{n}{Fi}\PY{p}{,} \PY{n}{La}\PY{p}{,} \PY{n}{Ga}\PY{p}{,} \PY{n}{P0}\PY{p}{,} \PY{n}{H}\PY{p}{,} \PY{n}{R}\PY{p}{,} \PY{n}{mi}\PY{p}{,} \PY{n}{N}\PY{o}{=}\PY{k+kc}{None}\PY{p}{)}\PY{p}{:}
+    \PY{l+s+sd}{\PYZsq{}\PYZsq{}\PYZsq{}}
+\PY{l+s+sd}{    Filters the measurements z taken at intervals mi through the Kalman filter defined by }
+\PY{l+s+sd}{    Fi, La, Ga, with measurement parameters H with statistics R. Control input u and initial}
+\PY{l+s+sd}{    state estimate error covariance P0. N is the blinding matrix used in the suboptimal}
+\PY{l+s+sd}{    Kalman filter.}
+\PY{l+s+sd}{    }
+\PY{l+s+sd}{    Returns tuple (x\PYZus{}bar, x\PYZus{}hat, p\PYZus{}bar, p\PYZus{}hat)}
+\PY{l+s+sd}{    \PYZsq{}\PYZsq{}\PYZsq{}}
+        
+    \PY{c+c1}{\PYZsh{} System order and simulation length}
+    \PY{n}{p}\PY{p}{,} \PY{n}{\PYZus{}} \PY{o}{=} \PY{n}{Fi}\PY{o}{.}\PY{n}{shape}
+    \PY{n}{\PYZus{}}\PY{p}{,} \PY{n}{nm} \PY{o}{=} \PY{n}{z}\PY{o}{.}\PY{n}{shape}
+    \PY{n}{\PYZus{}}\PY{p}{,} \PY{n}{n} \PY{o}{=} \PY{n}{u}\PY{o}{.}\PY{n}{shape}
+    \PY{n}{I} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{eye}\PY{p}{(}\PY{n}{p}\PY{p}{)}
+    \PY{k}{if} \PY{n}{N} \PY{o+ow}{is} \PY{k+kc}{None}\PY{p}{:}
+        \PY{n}{N} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{eye}\PY{p}{(}\PY{n}{p}\PY{p}{)}
+    
+    \PY{c+c1}{\PYZsh{} State vector estimates}
+    \PY{n}{x\PYZus{}bar} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{p}\PY{p}{,}\PY{n}{n}\PY{p}{)}\PY{p}{)}  \PY{c+c1}{\PYZsh{} a\PYZhy{}priori}
+    \PY{n}{x\PYZus{}hat} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{p}\PY{p}{,}\PY{n}{nm}\PY{p}{)}\PY{p}{)}  \PY{c+c1}{\PYZsh{} a\PYZhy{}posteriori}
+
+    \PY{c+c1}{\PYZsh{} Error covariance matrices}
+    \PY{n}{P\PYZus{}bar} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{n}\PY{p}{,}\PY{n}{p}\PY{p}{,}\PY{n}{p}\PY{p}{)}\PY{p}{)}  \PY{c+c1}{\PYZsh{} a\PYZhy{}priori}
+    \PY{n}{P\PYZus{}bar}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{=} \PY{n}{P0}
+    \PY{n}{P\PYZus{}hat} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{nm}\PY{p}{,}\PY{n}{p}\PY{p}{,}\PY{n}{p}\PY{p}{)}\PY{p}{)}  \PY{c+c1}{\PYZsh{} a\PYZhy{}posteriori}
+    
+    \PY{c+c1}{\PYZsh{} Run simulation}
+    \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{:}
+        
+        \PY{c+c1}{\PYZsh{} Measurement update}
+        \PY{k}{if} \PY{n}{k}\PY{o}{\PYZpc{}}\PY{k}{mi} == 0:
+            \PY{n}{km} \PY{o}{=} \PY{n}{k}\PY{o}{/}\PY{o}{/}\PY{n}{mi}
+            
+            \PY{c+c1}{\PYZsh{} Compute Kalman gain}
+            \PY{n}{Kk} \PY{o}{=} \PY{n}{P\PYZus{}bar}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{n+nd}{@H}\PY{o}{.}\PY{n}{T}\PY{n+nd}{@inv}\PY{p}{(}\PY{n}{H}\PY{n+nd}{@P\PYZus{}bar}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{n+nd}{@H}\PY{o}{.}\PY{n}{T} \PY{o}{+} \PY{n}{R}\PY{p}{)}
+
+            \PY{c+c1}{\PYZsh{} Update a\PYZhy{}posteriori estimate}
+            \PY{n}{x\PYZus{}hat}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{n}{km}\PY{p}{,}\PY{n}{np}\PY{o}{.}\PY{n}{newaxis}\PY{p}{]} \PY{o}{=} \PY{n}{x\PYZus{}bar}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{n}{k}\PY{p}{,}\PY{n}{np}\PY{o}{.}\PY{n}{newaxis}\PY{p}{]} \PY{o}{+} \PY{n}{Kk}\PY{o}{@}\PY{p}{(}\PY{n}{N}\PY{n+nd}{@z}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{n}{km}\PY{p}{,}\PY{n}{np}\PY{o}{.}\PY{n}{newaxis}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{H}\PY{n+nd}{@x\PYZus{}bar}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{n}{k}\PY{p}{,}\PY{n}{np}\PY{o}{.}\PY{n}{newaxis}\PY{p}{]}\PY{p}{)}
+            \PY{n}{P\PYZus{}hat}\PY{p}{[}\PY{n}{km}\PY{p}{]} \PY{o}{=} \PY{p}{(}\PY{n}{I} \PY{o}{\PYZhy{}} \PY{n}{Kk}\PY{n+nd}{@H}\PY{p}{)}\PY{n+nd}{@P\PYZus{}bar}\PY{p}{[}\PY{n}{k}\PY{p}{]}
+
+        \PY{c+c1}{\PYZsh{} Time update \PYZhy{} update a\PYZhy{}priori estimate}
+        \PY{n}{x\PYZus{}bar}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{n}{k}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{np}\PY{o}{.}\PY{n}{newaxis}\PY{p}{]} \PY{o}{=} \PY{n}{Fi}\PY{n+nd}{@x\PYZus{}hat}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{n}{km}\PY{p}{,}\PY{n}{np}\PY{o}{.}\PY{n}{newaxis}\PY{p}{]} \PY{o}{+} \PY{n}{La}\PY{n+nd}{@u}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{n}{k}\PY{p}{,}\PY{n}{np}\PY{o}{.}\PY{n}{newaxis}\PY{p}{]}
+        \PY{n}{P\PYZus{}bar}\PY{p}{[}\PY{n}{k}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{]} \PY{o}{=} \PY{n}{Fi}\PY{n+nd}{@P\PYZus{}hat}\PY{p}{[}\PY{n}{km}\PY{p}{]}\PY{n+nd}{@Fi}\PY{o}{.}\PY{n}{T} \PY{o}{+} \PY{n}{Ga}\PY{n+nd}{@Ga}\PY{o}{.}\PY{n}{T}
+    
+    \PY{c+c1}{\PYZsh{} Extract diagonals}
+    \PY{n}{p\PYZus{}bar} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{n}{P\PYZus{}bar}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{n}{i}\PY{p}{,}\PY{n}{i}\PY{p}{]} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{p}\PY{p}{)}\PY{p}{]}\PY{p}{)}
+    \PY{n}{p\PYZus{}hat} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{n}{P\PYZus{}hat}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{n}{i}\PY{p}{,}\PY{n}{i}\PY{p}{]} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{p}\PY{p}{)}\PY{p}{]}\PY{p}{)}
+    
+    \PY{k}{return} \PY{p}{(}\PY{n}{x\PYZus{}bar}\PY{p}{,} \PY{n}{x\PYZus{}hat}\PY{p}{,} \PY{n}{p\PYZus{}bar}\PY{p}{,} \PY{n}{p\PYZus{}hat}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    We will now filter measurements of the sochastic system simulation from
+part 3 above and see if the Kalman filter gives us a better state
+estimate than the measurements alone will give us. We ran the stochastic
+simulation with time step \(\Delta t = 0.01\) second, but will take
+measurements only once per second. We set measurement interval parameter
+\texttt{mi} to 100, and sample \texttt{xs} in noise \texttt{w}, which we
+keep in the variable \texttt{z}:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{14}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Measurement update}
+\PY{n}{mi} \PY{o}{=} \PY{l+m+mi}{100}
+\PY{n}{tm} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{tf}\PY{p}{,} \PY{n}{dt}\PY{o}{*}\PY{n}{mi}\PY{p}{)}
+\PY{n}{nm} \PY{o}{=} \PY{n}{tm}\PY{o}{.}\PY{n}{size}
+
+\PY{c+c1}{\PYZsh{} Take measurements}
+\PY{n}{xm} \PY{o}{=} \PY{n}{xs}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{:}\PY{n}{mi}\PY{p}{]}
+\PY{n}{\PYZus{}}\PY{p}{,} \PY{n}{nm} \PY{o}{=} \PY{n}{xm}\PY{o}{.}\PY{n}{shape}
+\PY{n}{w} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{,}\PY{n}{nm}\PY{p}{)}\PY{p}{)}
+\PY{n}{w}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{randn}\PY{p}{(}\PY{n}{nm}\PY{p}{)}
+\PY{n}{z} \PY{o}{=} \PY{n}{H}\PY{n+nd}{@xm} \PY{o}{+} \PY{n}{w}
+\end{Verbatim}
+\end{tcolorbox}
+
+    If we would rely only on measurements without taking any noise
+statistics into consideration, we would get the naive state estimates \[
+\begin{aligned}
+\check{x}_1(t_k) &= z_1(t_k) \\
+\check{x}_2(t_k) &= \frac{\check{x}_1(t_k) - \check{x}_1(t_k - \Delta t)}{\Delta t} \\
+\check{x}_3(t_k) &= \check{x}_3(t_k - \Delta t) + \big( 1 - e^{-\Delta t/T_3} \big) \big( u_3(t_k) - \check{x}_3(t_k - \Delta t) \big)
+\end{aligned},
+\] which can see plotted together with the repective true state variable
+below. We see that the direct measurement give estimates which are
+\emph{far} from the true values, especially for velocity. We will see
+next how the Kalman filter can help us achieve better results than
+these.
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_38_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    For the Kalman filter, we must calculate a new set of discrete system
+matrices to account for relative time step between measurements,
+\texttt{mi}.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{16}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Kalman filter matrices}
+\PY{n}{FiK}\PY{p}{,} \PY{n}{LaK}\PY{p}{,} \PY{n}{GaK} \PY{o}{=} \PY{n}{c2d\PYZus{}stochastic}\PY{p}{(}\PY{n}{F}\PY{p}{,} \PY{n}{L}\PY{p}{,} \PY{n}{G}\PY{p}{,} \PY{n}{Q}\PY{p}{,} \PY{n}{dt}\PY{o}{*}\PY{n}{mi}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Then we filter the measurements\ldots{}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{17}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Run simulation}
+\PY{p}{(}\PY{n}{x\PYZus{}bar}\PY{p}{,} \PY{n}{x\PYZus{}hat}\PY{p}{,} \PY{n}{p\PYZus{}bar}\PY{p}{,} \PY{n}{p\PYZus{}hat}\PY{p}{)} \PY{o}{=} \PY{n}{kalman\PYZus{}filter}\PY{p}{(}\PY{n}{z}\PY{p}{,} \PY{n}{u}\PY{p}{,} \PY{n}{FiK}\PY{p}{,} \PY{n}{LaK}\PY{p}{,} \PY{n}{GaK}\PY{p}{,} \PY{n}{P0}\PY{p}{,} \PY{n}{H}\PY{p}{,} \PY{n}{R}\PY{p}{,} \PY{n}{mi}\PY{p}{)}
+\PY{n}{e\PYZus{}bar} \PY{o}{=} \PY{n}{xs} \PY{o}{\PYZhy{}} \PY{n}{x\PYZus{}bar}  \PY{c+c1}{\PYZsh{} a\PYZhy{}priori estimate error}
+\PY{n}{e\PYZus{}hat} \PY{o}{=} \PY{n}{xm} \PY{o}{\PYZhy{}} \PY{n}{x\PYZus{}hat}  \PY{c+c1}{\PYZsh{} a\PYZhy{}posteriori estimate error}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \ldots{} and plot once more the estimated states \(\hat{x}_i\) together
+with the true values, as we did above. We see that the Kalman filter
+\emph{greatly} improves the quality of the estimates, especially for the
+velocity, but also for position, which above would be up to a few meters
+off, but now overlaps almost perfectly with the true position. Armature
+current is more or less the same.
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_44_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Below, in the first plot, we see a-priori and a-posteriori estimates for
+velocity together with the true velocity and control input. We saw in
+the deterministic simulation that the control input \(u\) translates
+1-to-1 to velocity setpoint, but that the noise will cause it to miss
+that target. In the general case, the a-posteriori estimate should be
+better than the a-priori estimate, but from the curves in the first plot
+that conclusion cannot be drawn easily. Better then to look at the
+estimate errors, which are presented in the next plots. To that end, we
+define the errors \[
+\begin{aligned}
+\bar{e}_2(k) &= x_2(k) - \bar{x}_2(k) \\
+\hat{e}_2(k) &= x_2(k) - \hat{x}_2(k)
+\end{aligned}
+\]
+
+In the plots, we see that both estimates do not deviate too much beyond
+the first standard deviation, and in the last plot we also see that
+there is a slight improvement from a-priori to a-posteriori.
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_46_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Below we see that the error reduction in the a-posteriori estimate is
+stronger for position and velocity than it is for armature current. This
+also fits well with what we saw when we compared the direct estimates
+with the Kalman filter estimates.
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_48_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Another feature of the Kalman filter which gives us an indication in the
+a-posteriori improvement is the update equiation for the a-posteriori
+covariance matrix, which should result in a reduction of error variance
+-- that is; \[
+\hat{\mathbf{P}}_k = (\mathbf{I} - \mathbf{K}_k \mathbf{H}) \bar{\mathbf{P}}_k \quad \Rightarrow \quad || \hat{\mathbf{P}}_k || < || \bar{\mathbf{P}}_k ||
+\] Below we see the error improvement statistics for our system, which
+also serves as a sanity check on our system model and implementation of
+the Kalman filter.
+
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_50_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \hypertarget{monte-carlo-simulation-of-optimal-system}{%
+\section*{5 Monte Carlo simulation of optimal
+system}\label{monte-carlo-simulation-of-optimal-system}}
+
+    We will use Monte Carlo simulation to estimate the Kalman filter
+statistics for the velocity estimate; \[
+\begin{aligned}
+\mathbb{E}[\hat{e}_2(k)] &\approx \hat{m}_2(k) = \frac{1}{N} \sum_{j=1}^N \hat{e}_2^{(j)}(k)  \\
+\mathbb{E}[\hat{e}_2^2(k)] &\approx \hat{p}_2(k) = \frac{1}{N} \sum_{j=1}^N \big( \hat{e}_2^{(j)}(k) - \hat{m}_2(k) \big)^2 \\
+\end{aligned}
+\] To do this, we must repeat the all non-deterministic steps performed
+in parts 3 and 4 for each run \(j = 1,2,...,N\) -- that is; 1. Simulate
+the stochastic process to resample the process noise \(v\) 2. Take new
+measurements of the process to resample measurement noise \(w\) 3.
+Repeat until done
+
+An implementation which lets us select the number of runs \texttt{N}
+follows below.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{22}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Kalman filter model matrices}
+\PY{n}{FiK}\PY{p}{,} \PY{n}{LaK}\PY{p}{,} \PY{n}{GaK} \PY{o}{=} \PY{n}{c2d\PYZus{}stochastic}\PY{p}{(}\PY{n}{F}\PY{p}{,} \PY{n}{L}\PY{p}{,} \PY{n}{G}\PY{p}{,} \PY{n}{Q}\PY{p}{,} \PY{n}{dt}\PY{o}{*}\PY{n}{mi}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Stochastic system model matrices}
+\PY{n}{FiS}\PY{p}{,} \PY{n}{LaS}\PY{p}{,} \PY{n}{GaS} \PY{o}{=} \PY{n}{c2d\PYZus{}stochastic}\PY{p}{(}\PY{n}{F}\PY{p}{,} \PY{n}{L}\PY{p}{,} \PY{n}{G}\PY{p}{,} \PY{n}{Q}\PY{p}{,} \PY{n}{dt}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{23}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{monte\PYZus{}carlo}\PY{p}{(}\PY{n}{N}\PY{p}{)}\PY{p}{:}
+    \PY{l+s+sd}{\PYZsq{}\PYZsq{}\PYZsq{}Runs Monte Carlo simulation with N runs.\PYZsq{}\PYZsq{}\PYZsq{}}
+
+    \PY{c+c1}{\PYZsh{} Run simulations}
+    \PY{n}{X\PYZus{}bar}\PY{p}{,} \PY{n}{X\PYZus{}hat}\PY{p}{,} \PY{n}{E\PYZus{}bar}\PY{p}{,} \PY{n}{E\PYZus{}hat} \PY{o}{=} \PY{n+nb}{list}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{n+nb}{list}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{n+nb}{list}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{n+nb}{list}\PY{p}{(}\PY{p}{)}
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{tqdm}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{n}{N}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+        \PY{c+c1}{\PYZsh{} New stochasitic process simulation}
+        \PY{n}{v} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{,}\PY{n}{n}\PY{p}{)}\PY{p}{)}
+        \PY{n}{v}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{randn}\PY{p}{(}\PY{n}{n}\PY{p}{)}
+        \PY{n}{xs} \PY{o}{=} \PY{n}{run\PYZus{}stochastic}\PY{p}{(}\PY{n}{u}\PY{p}{,} \PY{n}{v}\PY{p}{,} \PY{n}{FiS}\PY{p}{,} \PY{n}{LaS}\PY{p}{,} \PY{n}{GaS}\PY{p}{)}
+
+        \PY{c+c1}{\PYZsh{} Take measurements}
+        \PY{n}{xm} \PY{o}{=} \PY{n}{xs}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{:}\PY{n}{mi}\PY{p}{]}
+        \PY{n}{w} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{,}\PY{n}{nm}\PY{p}{)}\PY{p}{)}
+        \PY{n}{w}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{randn}\PY{p}{(}\PY{n}{nm}\PY{p}{)}
+        \PY{n}{z} \PY{o}{=} \PY{n}{H}\PY{n+nd}{@xm} \PY{o}{+} \PY{n}{w}
+
+        \PY{c+c1}{\PYZsh{} Run Kalman filter simulation}
+        \PY{p}{(}\PY{n}{x\PYZus{}bar}\PY{p}{,} \PY{n}{x\PYZus{}hat}\PY{p}{,} \PY{n}{p\PYZus{}bar}\PY{p}{,} \PY{n}{p\PYZus{}hat}\PY{p}{)} \PY{o}{=} \PY{n}{kalman\PYZus{}filter}\PY{p}{(}\PY{n}{z}\PY{p}{,} \PY{n}{u}\PY{p}{,} \PY{n}{FiK}\PY{p}{,} \PY{n}{LaK}\PY{p}{,} \PY{n}{GaK}\PY{p}{,} \PY{n}{P0}\PY{p}{,} \PY{n}{H}\PY{p}{,} \PY{n}{R}\PY{p}{,} \PY{n}{mi}\PY{p}{)}
+        \PY{n}{X\PYZus{}bar}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{x\PYZus{}bar}\PY{p}{)}
+        \PY{n}{X\PYZus{}hat}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{x\PYZus{}hat}\PY{p}{)}
+        \PY{n}{E\PYZus{}bar}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{xs}\PY{o}{\PYZhy{}}\PY{n}{x\PYZus{}bar}\PY{p}{)}
+        \PY{n}{E\PYZus{}hat}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{xm}\PY{o}{\PYZhy{}}\PY{n}{x\PYZus{}hat}\PY{p}{)}
+
+    \PY{n}{X\PYZus{}bar} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{concatenate}\PY{p}{(}\PY{n}{X\PYZus{}bar}\PY{p}{)}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n}{N}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}
+    \PY{n}{X\PYZus{}hat} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{concatenate}\PY{p}{(}\PY{n}{X\PYZus{}hat}\PY{p}{)}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n}{N}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}
+    \PY{n}{E\PYZus{}bar} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{concatenate}\PY{p}{(}\PY{n}{E\PYZus{}bar}\PY{p}{)}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n}{N}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}
+    \PY{n}{E\PYZus{}hat} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{concatenate}\PY{p}{(}\PY{n}{E\PYZus{}hat}\PY{p}{)}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n}{N}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}
+    
+    \PY{k}{return} \PY{p}{(}\PY{n}{X\PYZus{}bar}\PY{p}{,} \PY{n}{X\PYZus{}hat}\PY{p}{,} \PY{n}{E\PYZus{}bar}\PY{p}{,} \PY{n}{E\PYZus{}hat}\PY{p}{,} \PY{n}{p\PYZus{}bar}\PY{p}{,} \PY{n}{p\PYZus{}hat}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    We begin with \(N=10\) runs. In the first plots below we see the
+a-priori and a-posteriori \textbf{velocity estimates} for each run. The
+a-priori estimate is constant between each measurement update, since we
+do not change \(u\), but keep it constant throughout the simulation. It
+therefore gets the \emph{staricase}-like trajectory that we see to the
+left below. Both estimates mainly keep within the 0.8 to 1.2 m/s range
+after about 20 seconds. The \textbf{errors} are seen further down,
+plottet together with the respective error standard deviation. In the
+a-priori case, the error is calculated for each time step in the
+stochastic simulation, and therefore \emph{looks} more noisy than the
+a-posteriori error, but their \emph{variances} do not differ very much.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{24}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{p}{(}\PY{n}{X\PYZus{}bar}\PY{p}{,} \PY{n}{X\PYZus{}hat}\PY{p}{,} \PY{n}{E\PYZus{}bar}\PY{p}{,} \PY{n}{E\PYZus{}hat}\PY{p}{,} \PY{n}{p\PYZus{}bar}\PY{p}{,} \PY{n}{p\PYZus{}hat}\PY{p}{)} \PY{o}{=} \PY{n}{monte\PYZus{}carlo}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+100\%|||||||||||| 10/10 [00:01<00:00,  5.49it/s]
+    \end{Verbatim}
+
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_57_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Then, let's look at the statistics. Below we see the calculated error
+mean \(\hat{m}\) and standard deviation \(\hat{p}_2^{1/2}\) together
+with the true Kalman filter standard deviation for \(N=10, 100\) and
+\(1000\). We see that as \(N\) increases, the mean approaches zero, as
+expected, and that the Monte Carlo standard deviation places itself
+slightly above the Kalman filter value. This is also to expect
+(\emph{Gelb} p.~261 \emph{``{[}\ldots{]} filter covariance calculations
+are generally an optimistic indication of the accuracy of the
+filter.''}).
+
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+100\%|||||||||||| 10/10 [00:01<00:00,  5.41it/s]
+100\%|||||||||||| 100/100 [00:18<00:00,  5.48it/s]
+100\%|||||||||||| 1000/1000 [03:11<00:00,  5.23it/s]
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_59_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \hypertarget{error-budget-for-optimal-kalman-filter}{%
+\section*{6 Error budget for optimal Kalman
+filter}\label{error-budget-for-optimal-kalman-filter}}
+
+    We will now investigate how the different stochastic factors affect the
+error covariance in the Kalman filter. We have three sources of error,
+and these are 1. The initial covariance estimate \(\mathbf{P}_0\) 2. The
+process noise
+\(\mathbf{v}(t) \sim \mathcal{N}(\mathbf{0}, \tilde{\mathbf{Q}} \delta(t-\tau))\)
+3. The measurement noise
+\(\mathbf{w}_k \sim \mathcal{N}(\mathbf{0}, \tilde{\mathbf{R}} \delta_{kl})\)
+
+Since we are not modeling an observed physical system the system model
+is quite simple, and the system and filter models are equal (including
+the noise model). We can therefore set up the error budget using the
+following simplified equations: \[
+\begin{aligned}
+\bar{\mathbf{P}}_0 &= \mathbf{P}_0 \\
+\hat{\mathbf{P}}_k &= (\mathbf{I} - \mathbf{K}_k \mathbf{H}) \bar{\mathbf{P}}_k (\mathbf{I} - \mathbf{K}_k \mathbf{H})^T + \mathbf{K}_k \mathbf{R} \mathbf{K}_k^T \\
+\bar{\mathbf{P}}_{k+1} &= \mathbf{\Phi} \hat{\mathbf{P}}_k \mathbf{\Phi}^T + \mathbf{\Gamma} \mathbf{Q} \mathbf{\Gamma}^T
+\end{aligned}
+\] We see that the update equation for \(\hat{\mathbf{P}}\) has been
+changed from the one we saw in the optimal Kalman filter earlier. The
+reason for that is that we will use the Kalman gain from the optimal
+filter, which has all stochastic factors intact, while we blind out the
+contribution from all but one stochastic factor in a consecutive manner
+when we calculate the error budget. In our system, we have five
+different stochastic factors; * The three individual contributions form
+the diagonals elements in \(\mathbf{P}_0\), which we denote
+\(\sigma_{pos}^2, \sigma_{vel}^2, \sigma_{curr}^2\) * The process noice
+contribution to armature current, denoted \(\sigma_{proc}^2\) * The
+noice contribution to the position measurement, denoted
+\(\sigma_{meas}^2\)
+
+As said, we will consecutively blind out the contributions from all but
+one source. This lets us extract the contribution from the individual
+error sources on the individual state estimates. In sum, each state
+estimate error then has the standard deviation \[
+\hat{\sigma}_{sum} = \sqrt{\sigma_{pos}^2 + \sigma_{vel}^2 + \sigma_{curr}^2 + \sigma_{proc}^2 + \sigma_{meas}^2}.
+\] Since \(\mathbf{P}_0, \tilde{\mathbf{Q}}\) and \(\mathbf{R}\) do not
+affect the calculation of \(\mathbf{\Phi}\), and since the process noise
+has a contribution in only one state variable, we do not have to
+re-calculate the discrete system equations when we blind out the
+stochastic factors.
+
+Before we move on to the calculations, we make a function which lets us
+pre-calculate the Kalman gain for the error budgets using a simplified
+set of measurement-free Kalman filter equations: \[
+\begin{aligned}
+\bar{\mathbf{P}}_0 &= \mathbf{P}_0 \\
+\hat{\mathbf{P}}_k &= (\bar{\mathbf{P}}_k + \mathbf{H}^T \mathbf{RH})^{-1} \\
+\bar{\mathbf{P}}_{k+1} &= \mathbf{\Phi} \hat{\mathbf{P}}_k \mathbf{\Phi}^T + \mathbf{\Gamma} \mathbf{Q} \mathbf{\Gamma}^T
+\end{aligned}.
+\]
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{27}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{kalman\PYZus{}gains}\PY{p}{(}\PY{n}{Fi}\PY{p}{,} \PY{n}{Ga}\PY{p}{,} \PY{n}{P0}\PY{p}{,} \PY{n}{H}\PY{p}{,} \PY{n}{R}\PY{p}{,} \PY{n}{n}\PY{p}{)}\PY{p}{:}
+    \PY{l+s+sd}{\PYZsq{}\PYZsq{}\PYZsq{}}
+\PY{l+s+sd}{    Measurement\PYZhy{}free calculation of Kalman gain for system described by Fi, Ga, P0, }
+\PY{l+s+sd}{    with measurement characteristics H, R.}
+\PY{l+s+sd}{    \PYZsq{}\PYZsq{}\PYZsq{}}
+    \PY{c+c1}{\PYZsh{} Model order}
+    \PY{n}{p}\PY{p}{,} \PY{n}{\PYZus{}} \PY{o}{=} \PY{n}{Fi}\PY{o}{.}\PY{n}{shape}
+
+    \PY{c+c1}{\PYZsh{} A\PYZhy{}posteriori error covariance matrix}
+    \PY{n}{P\PYZus{}hat} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{n}\PY{p}{,}\PY{n}{p}\PY{p}{,}\PY{n}{p}\PY{p}{)}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Kalman gains}
+    \PY{n}{K} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{n}\PY{p}{,}\PY{n}{p}\PY{p}{,}\PY{n}{p}\PY{p}{)}\PY{p}{)}
+    
+    \PY{n}{P\PYZus{}bar} \PY{o}{=} \PY{n}{P0}
+    \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{p}{:}
+        \PY{c+c1}{\PYZsh{} Update a\PYZhy{}posteriori estimate}
+        \PY{n}{P\PYZus{}hat}\PY{p}{[}\PY{n}{k}\PY{p}{]} \PY{o}{=} \PY{n}{inv}\PY{p}{(}\PY{n}{inv}\PY{p}{(}\PY{n}{P\PYZus{}bar}\PY{p}{)} \PY{o}{+} \PY{n}{H}\PY{o}{.}\PY{n}{T}\PY{n+nd}{@R}\PY{n+nd}{@H}\PY{p}{)}
+        \PY{n}{K}\PY{p}{[}\PY{n}{k}\PY{p}{]} \PY{o}{=} \PY{n}{P\PYZus{}hat}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{n+nd}{@H}\PY{o}{.}\PY{n}{T}\PY{n+nd}{@inv}\PY{p}{(}\PY{n}{R}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{} Update a\PYZhy{}priori estimate}
+        \PY{n}{P\PYZus{}bar} \PY{o}{=} \PY{n}{Fi}\PY{n+nd}{@P\PYZus{}hat}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{n+nd}{@Fi}\PY{o}{.}\PY{n}{T} \PY{o}{+} \PY{n}{Ga}\PY{n+nd}{@Ga}\PY{o}{.}\PY{n}{T}
+        
+    \PY{c+c1}{\PYZsh{} Extract diagonals}
+    \PY{n}{p\PYZus{}hat} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{n}{P\PYZus{}hat}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{n}{i}\PY{p}{,}\PY{n}{i}\PY{p}{]} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{p}\PY{p}{)}\PY{p}{]}\PY{p}{)}
+    
+    \PY{k}{return} \PY{p}{(}\PY{n}{K}\PY{p}{,} \PY{n}{p\PYZus{}hat}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Then, let's implement a function which lets us calculate the blinded-out
+covariences:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{28}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{covar\PYZus{}analysis}\PY{p}{(}\PY{n}{Fi}\PY{p}{,} \PY{n}{Ga}\PY{p}{,} \PY{n}{P0}\PY{p}{,} \PY{n}{H}\PY{p}{,} \PY{n}{R}\PY{p}{,} \PY{n}{K}\PY{p}{)}\PY{p}{:}
+    \PY{l+s+sd}{\PYZsq{}\PYZsq{}\PYZsq{}}
+\PY{l+s+sd}{    Calculates the error covariance of the system described by Fi, Ga, P0,}
+\PY{l+s+sd}{    with measurement characteristics R, H by applying Kalman gains K.}
+\PY{l+s+sd}{    \PYZsq{}\PYZsq{}\PYZsq{}}
+    \PY{c+c1}{\PYZsh{} Model order and calculation range}
+    \PY{n}{n}\PY{p}{,} \PY{n}{p}\PY{p}{,} \PY{n}{\PYZus{}} \PY{o}{=} \PY{n}{K}\PY{o}{.}\PY{n}{shape}
+    \PY{n}{I} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{eye}\PY{p}{(}\PY{n}{p}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} A\PYZhy{}posteriori error covariance matrix}
+    \PY{n}{P\PYZus{}hat} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{n}\PY{p}{,}\PY{n}{p}\PY{p}{,}\PY{n}{p}\PY{p}{)}\PY{p}{)}
+    
+    \PY{n}{P\PYZus{}bar} \PY{o}{=} \PY{n}{P0}
+    \PY{k}{for} \PY{n}{k} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{p}{:}
+        \PY{c+c1}{\PYZsh{} Update a\PYZhy{}posteriori}
+        \PY{n}{P\PYZus{}hat}\PY{p}{[}\PY{n}{k}\PY{p}{]} \PY{o}{=} \PY{p}{(}\PY{n}{I} \PY{o}{\PYZhy{}} \PY{n}{K}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{n+nd}{@H}\PY{p}{)}\PY{n+nd}{@P\PYZus{}bar}\PY{o}{@}\PY{p}{(}\PY{n}{I} \PY{o}{\PYZhy{}} \PY{n}{K}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{n+nd}{@H}\PY{p}{)}\PY{o}{.}\PY{n}{T} \PY{o}{+} \PY{n}{K}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{n+nd}{@R}\PY{n+nd}{@K}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{o}{.}\PY{n}{T}
+
+        \PY{c+c1}{\PYZsh{} Update a\PYZhy{}priori}
+        \PY{n}{P\PYZus{}bar} \PY{o}{=} \PY{n}{Fi}\PY{n+nd}{@P\PYZus{}hat}\PY{p}{[}\PY{n}{k}\PY{p}{]}\PY{n+nd}{@Fi}\PY{o}{.}\PY{n}{T} \PY{o}{+} \PY{n}{Ga}\PY{n+nd}{@Ga}\PY{o}{.}\PY{n}{T}
+        
+    \PY{c+c1}{\PYZsh{} Extract diagonals}
+    \PY{n}{p\PYZus{}hat} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{n}{P\PYZus{}hat}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{n}{i}\PY{p}{,}\PY{n}{i}\PY{p}{]} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{p}\PY{p}{)}\PY{p}{]}\PY{p}{)}
+    
+    \PY{k}{return} \PY{n}{p\PYZus{}hat}
+\end{Verbatim}
+\end{tcolorbox}
+
+    We begin the error budget calculations by calculating the Kalman gain
+over \texttt{nm} iterations, and keep at the same time the diagonal
+elements of the total estimation error covariance matrix,
+\texttt{p\_tot}. We will use this to evaluate the sum of the individial
+contributions, \texttt{p\_sum}, calculated further down.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{29}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Calculate Kalman gains and the total estimation error covariance}
+\PY{n}{FiK}\PY{p}{,} \PY{n}{LaK}\PY{p}{,} \PY{n}{GaK} \PY{o}{=} \PY{n}{c2d\PYZus{}stochastic}\PY{p}{(}\PY{n}{F}\PY{p}{,} \PY{n}{L}\PY{p}{,} \PY{n}{G}\PY{p}{,} \PY{n}{Q}\PY{p}{,} \PY{n}{dt}\PY{o}{*}\PY{n}{mi}\PY{p}{)}
+\PY{n}{K}\PY{p}{,} \PY{n}{p\PYZus{}tot} \PY{o}{=} \PY{n}{kalman\PYZus{}gains}\PY{p}{(}\PY{n}{FiK}\PY{p}{,} \PY{n}{GaK}\PY{p}{,} \PY{n}{P0}\PY{p}{,} \PY{n}{H}\PY{p}{,} \PY{n}{R}\PY{p}{,} \PY{n}{nm}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Then we calculate the individual error covariance contributions which
+make up the error budget for our system:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{30}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Error budget calculation}
+
+\PY{c+c1}{\PYZsh{} P0 position}
+\PY{n}{P0e} \PY{o}{=} \PY{n}{P0}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\PY{n}{Gae} \PY{o}{=} \PY{n}{GaK}\PY{o}{*}\PY{l+m+mi}{0}
+\PY{n}{Re} \PY{o}{=} \PY{n}{R}\PY{o}{*}\PY{l+m+mi}{0}
+\PY{n}{p\PYZus{}P0\PYZus{}pos} \PY{o}{=} \PY{n}{covar\PYZus{}analysis}\PY{p}{(}\PY{n}{FiK}\PY{p}{,} \PY{n}{Gae}\PY{p}{,} \PY{n}{P0e}\PY{p}{,} \PY{n}{H}\PY{p}{,} \PY{n}{Re}\PY{p}{,} \PY{n}{K}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} P0 velocity}
+\PY{n}{P0e} \PY{o}{=} \PY{n}{P0}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\PY{n}{p\PYZus{}P0\PYZus{}vel} \PY{o}{=} \PY{n}{covar\PYZus{}analysis}\PY{p}{(}\PY{n}{FiK}\PY{p}{,} \PY{n}{Gae}\PY{p}{,} \PY{n}{P0e}\PY{p}{,} \PY{n}{H}\PY{p}{,} \PY{n}{Re}\PY{p}{,} \PY{n}{K}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} P0 armature current}
+\PY{n}{P0e} \PY{o}{=} \PY{n}{P0}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\PY{n}{p\PYZus{}P0\PYZus{}cur} \PY{o}{=} \PY{n}{covar\PYZus{}analysis}\PY{p}{(}\PY{n}{FiK}\PY{p}{,} \PY{n}{Gae}\PY{p}{,} \PY{n}{P0e}\PY{p}{,} \PY{n}{H}\PY{p}{,} \PY{n}{Re}\PY{p}{,} \PY{n}{K}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Process noise}
+\PY{n}{P0e} \PY{o}{=} \PY{n}{P0}\PY{o}{*}\PY{l+m+mi}{0}
+\PY{n}{Gae} \PY{o}{=} \PY{n}{GaK}\PY{o}{*}\PY{l+m+mi}{1}
+\PY{n}{Re} \PY{o}{=} \PY{n}{R}\PY{o}{*}\PY{l+m+mi}{0}
+\PY{n}{p\PYZus{}proc} \PY{o}{=} \PY{n}{covar\PYZus{}analysis}\PY{p}{(}\PY{n}{FiK}\PY{p}{,} \PY{n}{Gae}\PY{p}{,} \PY{n}{P0e}\PY{p}{,} \PY{n}{H}\PY{p}{,} \PY{n}{Re}\PY{p}{,} \PY{n}{K}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Measurement noise}
+\PY{n}{Gae} \PY{o}{=} \PY{n}{GaK}\PY{o}{*}\PY{l+m+mi}{0}
+\PY{n}{Re} \PY{o}{=} \PY{n}{R}\PY{o}{*}\PY{l+m+mi}{1}
+\PY{n}{p\PYZus{}meas} \PY{o}{=} \PY{n}{covar\PYZus{}analysis}\PY{p}{(}\PY{n}{FiK}\PY{p}{,} \PY{n}{Gae}\PY{p}{,} \PY{n}{P0e}\PY{p}{,} \PY{n}{H}\PY{p}{,} \PY{n}{Re}\PY{p}{,} \PY{n}{K}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    We do some data structuring and plot the results below.
+
+When we look at the plots, the most immediate insight is that the effect
+of the \textbf{initial covariance estimate} \(\mathbf{P}_0\) is of
+course strongest in the state correspoding to the respective state
+variable. It also dies out within 20 seconds, meaning that it is not a
+hugely critical parameter for the performance of the Kalman filter in
+the application which we study here. The next insight is that for
+\textbf{position}, it is the measurement noise which is most important,
+while the process noise, to which it is only indirectly linked, is less
+influential. For \textbf{velocity} and \textbf{armature current}, the
+process noise is completely dominating. In the design of a system, this
+would tell us that our effort should go into better regulation of the DC
+power source than a less noisy position measurement sensor, if we want
+an accurate speed estimate.
+
+Especially armature current is very weakly affected by the noise in the
+position measurements, which is not surprising given that the connection
+between armature current and position is strictly one-way in the system
+equations. However, the \emph{estimate} of position also affects
+armature current, and that is why we see a small flow of uncertainty
+from position measurement noise back to the armature current estimate.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{31}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Structuring error budget results}
+\PY{n}{p\PYZus{}collection} \PY{o}{=} \PY{p}{[}\PY{n}{p\PYZus{}P0\PYZus{}pos}\PY{p}{,} \PY{n}{p\PYZus{}P0\PYZus{}vel}\PY{p}{,} \PY{n}{p\PYZus{}P0\PYZus{}cur}\PY{p}{,} \PY{n}{p\PYZus{}proc}\PY{p}{,} \PY{n}{p\PYZus{}meas}\PY{p}{]}
+\PY{n}{p\PYZus{}sum} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{concatenate}\PY{p}{(}\PY{n}{p\PYZus{}collection}\PY{p}{)}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{l+m+mi}{5}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}
+\PY{n}{p\PYZus{}collection} \PY{o}{=} \PY{p}{[}\PY{n}{p\PYZus{}sum}\PY{p}{]} \PY{o}{+} \PY{n}{p\PYZus{}collection}
+\end{Verbatim}
+\end{tcolorbox}
+
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_71_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Finally, we confirm by inspecting the plot below that the sum of the
+individual contributions to the error add up to the error which we get
+by including all error sources; \[
+\hat{\sigma}_{sum} = \hat{\sigma}_{tot}.
+\] They are, as we see, overlapping each other completely.
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_73_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \hypertarget{suboptimal-kalman-filter}{%
+\section*{7 Suboptimal Kalman filter}\label{suboptimal-kalman-filter}}
+
+    At last, we will look at how the Kalman filter performs when we use a
+reduced model of the system as basis. This reduced model, or
+\emph{filter model} \(\mathcal{M^F}\), will treat the armature current
+\(x_3\) as white noise, such that we get the filter model state vector
+\[
+\mathbf{x}^* = \mathbf{N}\mathbf{x}
+\quad \Rightarrow \quad 
+\begin{bmatrix}
+\dot{x}_1^* \\ \dot{x}_2^*
+\end{bmatrix}
+=
+\begin{bmatrix}
+1 & 0 & 0 \\
+0 & 1 & 0
+\end{bmatrix}
+\begin{bmatrix}
+x_1 \\ x_2 \\x_3
+\end{bmatrix}
+\] Here, we have introduced a \emph{blinding matrix} \(\mathbf{N}\),
+which \emph{blinds out} the all but the relevant states in the system
+model \(\mathcal{M^S}\). For reasons which will become apparent later,
+we will wish to keep the shape of the input vector \(\mathbf{u}\)
+unchanged, such that we get the filter model equation \[
+\dot{\mathbf{x}}^* = \mathbf{F}^* \mathbf{x}^* + \mathbf{L}^* \mathbf{u} + \mathbf{G}^* \mathbf{v}^*
+\quad \Rightarrow \quad
+\begin{bmatrix}
+\dot{x}_1^* \\ \dot{x}_2^*
+\end{bmatrix}
+=
+\begin{bmatrix}
+0 & 1 \\
+0 & \frac{-1}{T_2}
+\end{bmatrix}
+\begin{bmatrix}
+x_1^* \\ x_2^*
+\end{bmatrix}
++
+\begin{bmatrix}
+0 & 0 & 0 \\
+0 & 0 & \frac{1}{T_2}
+\end{bmatrix}
+\begin{bmatrix}
+0 \\ 0 \\ u
+\end{bmatrix}
++
+\begin{bmatrix}
+0 & 0 \\
+0 & \frac{1}{T_2}
+\end{bmatrix}
+\begin{bmatrix}
+0 \\ v^*
+\end{bmatrix}.
+\] Here, \(v^*\) is the random variable representing \(x_3\) in the
+velocity equation -- hence the \(\frac{1}{T_2}\) gain. Since we treat
+\(x_3\) as white noise, \(v^*\) must be a zero-mean Gaussian, but we do
+not yet know its variance. To find this, we will use the linear variance
+equation, which in the scalar case has takes the form \[
+\dot{p}_3(t) = 2f_3(t)p_3(t) + q_3(t).
+\] In our case, \(f_3(t) = -\frac{1}{T_3}\) and \(q_3(t) = \tilde{q}\),
+such that the equation becomes \[
+\dot{p}_3(t) = -\frac{2}{T_3} p_3(t) + \tilde{q},
+\] which has the steady-state solution \[
+\lim_{t \rightarrow \infty} p_3(t) = \frac{T_3}{2} \tilde{q}.
+\] Hence, for the reduced filter model we get the process noise \[
+v^*(t) \sim \mathcal{N} \big( 0, \frac{T_3}{2} \tilde{q} \delta(t - \tau) \big).
+\]
+
+We will first see how the suboptimal Kalman filter performs by studying
+the velocity estimate, and then perform a covariance analysis.
+
+Let's start by declaring the two-state filter model variables:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{34}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Filter model dimensions}
+\PY{n}{pF}\PY{p}{,} \PY{n}{p} \PY{o}{=} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{3}
+\PY{n}{pa} \PY{o}{=} \PY{n}{pF} \PY{o}{+} \PY{n}{p}
+\PY{n}{N} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{eye}\PY{p}{(}\PY{n}{pF}\PY{o}{+}\PY{n}{p}\PY{p}{)}\PY{p}{[}\PY{p}{:}\PY{n}{pF}\PY{p}{,}\PY{p}{:}\PY{n}{p}\PY{p}{]}
+
+\PY{c+c1}{\PYZsh{} Filter model matrices}
+\PY{n}{QF} \PY{o}{=} \PY{n}{T3}\PY{o}{/}\PY{l+m+mi}{2}\PY{o}{*}\PY{n}{Q}\PY{p}{[}\PY{p}{:}\PY{n}{pF}\PY{p}{,}\PY{p}{:}\PY{n}{pF}\PY{p}{]}
+\PY{n}{FF} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,}
+               \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{o}{/}\PY{n}{T2}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\PY{n}{LF} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}
+               \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{o}{/}\PY{n}{T2}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\PY{n}{GF} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}
+               \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{1}\PY{o}{/}\PY{n}{T2}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\PY{n}{P0F} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{diag}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,}\PY{o}{.}\PY{l+m+mi}{1}\PY{o}{*}\PY{o}{*}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Measurement parameters}
+\PY{n}{RF} \PY{o}{=} \PY{l+m+mi}{1}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{eye}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{)}
+\PY{n}{HF} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,}
+               \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Then we run a simulation using \(\mathcal{M^S}\) and keep the results as
+before in a variable \texttt{xs}:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{35}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} System model discrete matrices}
+\PY{n}{FiS}\PY{p}{,} \PY{n}{LaS}\PY{p}{,} \PY{n}{GaS} \PY{o}{=} \PY{n}{c2d\PYZus{}stochastic}\PY{p}{(}\PY{n}{F}\PY{p}{,} \PY{n}{L}\PY{p}{,} \PY{n}{G}\PY{p}{,} \PY{n}{Q}\PY{p}{,} \PY{n}{dt}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} New stochasitic process simulation}
+\PY{n}{v} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{,}\PY{n}{n}\PY{p}{)}\PY{p}{)}
+\PY{n}{v}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{randn}\PY{p}{(}\PY{n}{n}\PY{p}{)}
+\PY{n}{xs} \PY{o}{=} \PY{n}{run\PYZus{}stochastic}\PY{p}{(}\PY{n}{u}\PY{p}{,} \PY{n}{v}\PY{p}{,} \PY{n}{FiS}\PY{p}{,} \PY{n}{LaS}\PY{p}{,} \PY{n}{GaS}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    As for the optimal case, we use the system model measurement matrix
+\(\mathbf{H}\), but, since we only model two states in the filter, we
+must apply the blinding matrix \(\mathbf{N}\) in the Kalman filter at
+measurement update, such that the a-posteriori state estimate in the
+algorithm becomes \[
+\hat{\mathbf{x}}_k \leftarrow \bar{\mathbf{x}}_k + \mathbf{K}_k (\mathbf{Nz}_k - \mathbf{H}\bar{\mathbf{x}}_k).
+\] We thus take the measurements from the simulation\ldots{}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{36}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Take measurements}
+\PY{n}{xm} \PY{o}{=} \PY{n}{xs}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{:}\PY{n}{mi}\PY{p}{]}
+\PY{n}{\PYZus{}}\PY{p}{,} \PY{n}{nm} \PY{o}{=} \PY{n}{xm}\PY{o}{.}\PY{n}{shape}
+\PY{n}{w} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{,}\PY{n}{nm}\PY{p}{)}\PY{p}{)}
+\PY{n}{w}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{randn}\PY{p}{(}\PY{n}{nm}\PY{p}{)}
+\PY{n}{z} \PY{o}{=} \PY{n}{H}\PY{n+nd}{@xm} \PY{o}{+} \PY{n}{w}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \ldots{} and run them through the suboptimal Kalman filter, where we
+have applied the optional argument \texttt{N=N} to signal that this is
+the suboptimal case. Here we also see, for the first time, why we
+benefit from keeping the dimensionality of \(\mathbf{u}\) unchanged
+between the optimal and suboptimal filters.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{37}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Suboptimal Kalman filter}
+\PY{n}{FiF}\PY{p}{,} \PY{n}{LaF}\PY{p}{,} \PY{n}{GaF} \PY{o}{=} \PY{n}{c2d\PYZus{}stochastic}\PY{p}{(}\PY{n}{FF}\PY{p}{,} \PY{n}{LF}\PY{p}{,} \PY{n}{GF}\PY{p}{,} \PY{n}{QF}\PY{p}{,} \PY{n}{dt}\PY{o}{*}\PY{n}{mi}\PY{p}{)}
+\PY{p}{(}\PY{n}{x\PYZus{}bar\PYZus{}s}\PY{p}{,} \PY{n}{x\PYZus{}hat\PYZus{}s}\PY{p}{,} \PY{n}{p\PYZus{}bar\PYZus{}s}\PY{p}{,} \PY{n}{p\PYZus{}hat\PYZus{}s}\PY{p}{)} \PY{o}{=} \PY{n}{kalman\PYZus{}filter}\PY{p}{(}\PY{n}{z}\PY{p}{,} \PY{n}{u}\PY{p}{,} \PY{n}{FiF}\PY{p}{,} \PY{n}{LaF}\PY{p}{,} \PY{n}{GaF}\PY{p}{,} \PY{n}{P0F}\PY{p}{,} \PY{n}{HF}\PY{p}{,} \PY{n}{RF}\PY{p}{,} \PY{n}{mi}\PY{p}{,} \PY{n}{N}\PY{o}{=}\PY{n}{N}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    For comparison, we also run the measurements through the optimal Kalman
+filter\ldots{}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{38}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Optimal Kalman filter}
+\PY{n}{Fi}\PY{p}{,} \PY{n}{La}\PY{p}{,} \PY{n}{Ga} \PY{o}{=} \PY{n}{c2d\PYZus{}stochastic}\PY{p}{(}\PY{n}{F}\PY{p}{,} \PY{n}{L}\PY{p}{,} \PY{n}{G}\PY{p}{,} \PY{n}{Q}\PY{p}{,} \PY{n}{dt}\PY{o}{*}\PY{n}{mi}\PY{p}{)}
+\PY{p}{(}\PY{n}{x\PYZus{}bar\PYZus{}o}\PY{p}{,} \PY{n}{x\PYZus{}hat\PYZus{}o}\PY{p}{,} \PY{n}{p\PYZus{}bar\PYZus{}o}\PY{p}{,} \PY{n}{p\PYZus{}hat\PYZus{}o}\PY{p}{)} \PY{o}{=} \PY{n}{kalman\PYZus{}filter}\PY{p}{(}\PY{n}{z}\PY{p}{,} \PY{n}{u}\PY{p}{,} \PY{n}{Fi}\PY{p}{,} \PY{n}{La}\PY{p}{,} \PY{n}{Ga}\PY{p}{,} \PY{n}{P0}\PY{p}{,} \PY{n}{H}\PY{p}{,} \PY{n}{R}\PY{p}{,} \PY{n}{mi}\PY{p}{,} \PY{n}{N}\PY{o}{=}\PY{k+kc}{None}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \ldots{} and plot the velocity estimates together with the true value.
+
+We see that the suboptimal filter has a smoothing effect on the
+estimate, which is caused by the blinding-out of the armature current
+noise when we apply \(\mathbf{N}\) on the a-priori state estimate --
+that is; \[
+\bar{\mathbf{x}}_{k+1}^* \leftarrow \mathbf{\Phi}^* \mathbf{z}_k^* + \mathbf{\Lambda}^* \mathbf{u}_k =  \mathbf{\Phi}^* \mathbf{Nz}_k + \mathbf{\Lambda}^* \mathbf{u}_k.
+\] Below we see that the remaining elements in the filter model
+transition matrix \texttt{FiF} are identical to the corresponding system
+model matrix \texttt{Fi}, which supports this conclusion.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{39}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{FiF}\PY{p}{,} \PY{n}{Fi}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{39}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+(array([[1.        , 0.90634623],
+        [0.        , 0.81873075]]),
+ array([[1.        , 0.90634623, 0.06855642],
+        [0.        , 0.81873075, 0.11271283],
+        [0.        , 0.        , 0.36787944]]))
+\end{Verbatim}
+\end{tcolorbox}
+        
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_87_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Since we remove some of the \emph{observed} process noise when we do the
+model reduction, we could perhaps be tempted to conclude that the
+suboptimal estimate is \emph{better}, given that the estimate is
+smoother. And that might be the right conclusion, in some cases -- but,
+the cost of this smoothing is a somewhat larger error in the estimate,
+which we will investigate next by covariance analyis.
+
+We cannot directly proceed as we did in part 6, by running the
+\texttt{covar\_analysis()} function with the suboptimal matrices -- the
+resulting \(\hat{\mathbf{P}}^*\) is unreliable. Instead, we will set up
+a system of augmented states, \(\mathbf{x}^{(a)}\), which models
+suboptimal the errors as two of its states; \[
+\mathbf{x}^{(a)} = 
+\begin{bmatrix}
+\hat{\mathbf{e}}^* \\
+\mathbf{x} \\
+\end{bmatrix}
+=
+\begin{bmatrix}
+\mathbf{Nx} - \hat{\mathbf{x}}^* \\
+\mathbf{x} \\
+\end{bmatrix}.
+\] To set up the corresponding augmented matrices, we begin with the
+a-priori estimate error, which becomes \[
+\bar{\mathbf{e}}_{k+1}^* = \mathbf{Nx}_{k+1} - \bar{\mathbf{x}}_{k+1}^* = \mathbf{N} (\mathbf{\Phi}\mathbf{x}_k + \mathbf{\Lambda}\mathbf{u}_k + \mathbf{\Gamma}\mathbf{v}_k) - (\mathbf{\Phi}^*\hat{\mathbf{x}}^*_k + \mathbf{\Lambda}^*\mathbf{u}_k).
+\] Here we see for the second time the benefit of keeping the dimensions
+of \(\mathbf{u}\) unchanged between the system and filter models: We add
+a zero sum term
+\((\mathbf{\Phi}^*\mathbf{N}\mathbf{x}_k - \mathbf{\Phi}^*\mathbf{N}\mathbf{x}_k)\)
+and write \[
+\begin{aligned}
+\bar{\mathbf{e}}_{k+1}^* &= \mathbf{\Phi}^*(\mathbf{N}\mathbf{x}_k - \hat{\mathbf{x}}^*_k) + (\mathbf{N \Lambda} - \mathbf{\Lambda}^*)\mathbf{u}_k + \mathbf{N \Gamma}\mathbf{v}_k + (\mathbf{N \Phi} - \mathbf{\Phi}^*\mathbf{N})\mathbf{x}_k \\
+&= \mathbf{\Phi}^*\hat{\mathbf{e}}^*_k + \Delta \mathbf{\Lambda} \mathbf{u}_k + \mathbf{N \Gamma}\mathbf{v}_k + \Delta \mathbf{\Phi} \mathbf{x}_k.
+\end{aligned}
+\] The augmented a-priori state equation thus becomes \[
+\bar{\mathbf{x}}^{(a)}_{k+1} = 
+\begin{bmatrix}
+\mathbf{\Phi}^* & \Delta \mathbf{\Phi} \\
+\mathbf{0} & \mathbf{\Phi}
+\end{bmatrix}
+\hat{\mathbf{x}}^{(a)}_k
++
+\begin{bmatrix}
+\Delta \mathbf{\Lambda} \\ \mathbf{\Lambda}
+\end{bmatrix}
+\mathbf{u}_k
++
+\begin{bmatrix}
+\mathbf{N \Gamma} \\ \mathbf{\Gamma}
+\end{bmatrix}
+\mathbf{v}_k.
+\] Or, more consisely; \[
+\bar{\mathbf{x}}^{(a)}_{k+1} = \mathbf{\Phi}^{(a)} \hat{\mathbf{x}}^{(a)}_k + \mathbf{\Lambda}^{(a)} \mathbf{u}_k + \mathbf{\Gamma}^{(a)} \mathbf{v}_k.
+\]
+
+    Likewise, we proceed to find the augmented measurement matrix and Kalman
+gain by expanding the a-posteriori estimate error; \[
+\hat{\mathbf{e}}_k^* = \mathbf{Nx}_k - \hat{\mathbf{x}}_k^* = \mathbf{Nx}_k - (\bar{\mathbf{x}}_k^* + \mathbf{K}_k^*(\mathbf{Nz}_k - \mathbf{H}^* \bar{\mathbf{x}}_k^*)).
+\] Again, we add a zero term
+\((\mathbf{H}^*\mathbf{N}\mathbf{x}_k - \mathbf{H}^*\mathbf{N}\mathbf{x}_k)\)
+inside the parenthesis, and expand
+\(\mathbf{z}_k = \mathbf{Hx}_k + \mathbf{w}_k\). We then get \[
+\begin{aligned}
+\hat{\mathbf{e}}_k^* &= \bar{\mathbf{e}}_k^* - \mathbf{K}_k^*(\mathbf{H}^* \bar{\mathbf{e}}_k^* + (\mathbf{NH} - \mathbf{H}^*\mathbf{N})\mathbf{x}_k + \mathbf{Nw}_k) \\
+&= (\mathbf{I} - \mathbf{K}_k^*\mathbf{H}^*)\bar{\mathbf{e}}_k^* - \mathbf{K}_k^* \Delta \mathbf{H} \mathbf{x}_k - \mathbf{K}_k^* \mathbf{Nw}_k.
+\end{aligned}
+\] For the augmented a-posteriori state, we thus get the equation \[
+\hat{\mathbf{x}}^{(a)}_k = 
+\begin{bmatrix}
+\mathbf{I}^* & \mathbf{0} \\
+\mathbf{0} & \mathbf{I}
+\end{bmatrix}
+\bar{\mathbf{x}}^{(a)}_k
+-
+\begin{bmatrix}
+\mathbf{K}_k^* \\ \mathbf{0}
+\end{bmatrix}
+\begin{bmatrix}
+\mathbf{H}^* & \Delta \mathbf{H} \\
+\end{bmatrix}
+\bar{\mathbf{x}}^{(a)}_k
+-
+\begin{bmatrix}
+\mathbf{K}_k^* \\ \mathbf{0}
+\end{bmatrix}
+\mathbf{Nw}_k,
+\] or, again, more consisely; \[
+\hat{\mathbf{x}}^{(a)}_k = (\mathbf{I}^{(a)} - \mathbf{K}_k^{(a)} \mathbf{H}^{(a)}) \bar{\mathbf{x}}^{(a)}_k - \mathbf{K}_k^{(a)} \mathbf{Nw}_k.
+\]
+
+    Lastly, we must put the augmented covariance matrix into right shape. We
+apply the blinding matrix \(\mathbf{N}\) appropriately and write
+directly \[
+\mathbf{P}^{(a)} = 
+\begin{bmatrix}
+\mathbf{NPN}^T & \mathbf{NP} \\
+\mathbf{PN}^T & \mathbf{P}
+\end{bmatrix}.
+\] The true error covariance \(\mathbf{P}^{(e)}\) which we seek to find
+through the covariance analysis is then found in the upper left corner
+of \(\mathbf{P}^{(a)}\); \[
+\mathbf{P}^{(a)}_k = 
+\begin{bmatrix}
+\mathbf{P}^{(e)}_k & \cdots \\
+\cdots & \cdots
+\end{bmatrix},
+\] and the variance of each state estimate error along
+\(\mathbf{P}^{(e)}\)'s diagonal.
+
+    Below, we implement first a function \texttt{augmented\_state()} which
+transforms the state parameters into right shape, and then a function
+\texttt{augmented\_system()}, which transforms the system and filter
+matrices into the augmented system matrices:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{41}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{augmented\PYZus{}state}\PY{p}{(}\PY{n}{N}\PY{p}{,} \PY{n}{e}\PY{p}{,} \PY{n}{x}\PY{p}{,} \PY{n}{K}\PY{p}{,} \PY{n}{P0}\PY{p}{)}\PY{p}{:}
+    \PY{n}{pF}\PY{p}{,} \PY{n}{p} \PY{o}{=} \PY{n}{N}\PY{o}{.}\PY{n}{shape}
+    \PY{n}{pa} \PY{o}{=} \PY{n}{pF} \PY{o}{+} \PY{n}{p}
+    \PY{n}{n} \PY{o}{=} \PY{n}{K}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+    
+    \PY{n}{x\PYZus{}a} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{pa}\PY{p}{,}\PY{n}{n}\PY{p}{)}\PY{p}{)}
+    \PY{n}{x\PYZus{}a}\PY{p}{[}\PY{p}{:}\PY{n}{pF}\PY{p}{]} \PY{o}{=} \PY{n}{e}
+    \PY{n}{x\PYZus{}a}\PY{p}{[}\PY{n}{pF}\PY{p}{:}\PY{p}{]} \PY{o}{=} \PY{n}{x}
+    
+    \PY{n}{K\PYZus{}a} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{n}\PY{p}{,} \PY{n}{pa}\PY{p}{,} \PY{n}{pF}\PY{p}{)}\PY{p}{)}
+    \PY{n}{K\PYZus{}a}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{p}{:}\PY{n}{pF}\PY{p}{,}\PY{p}{:}\PY{p}{]} \PY{o}{=} \PY{n}{K}
+    
+    \PY{n}{P0\PYZus{}a} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{pa}\PY{p}{,} \PY{n}{pa}\PY{p}{)}\PY{p}{)}
+    \PY{n}{P0\PYZus{}a}\PY{p}{[}\PY{p}{:}\PY{n}{pF}\PY{p}{,}\PY{p}{:}\PY{n}{pF}\PY{p}{]} \PY{o}{=} \PY{n}{N}\PY{n+nd}{@P0}\PY{n+nd}{@N}\PY{o}{.}\PY{n}{T}
+    \PY{n}{P0\PYZus{}a}\PY{p}{[}\PY{p}{:}\PY{n}{pF}\PY{p}{,}\PY{n}{pF}\PY{p}{:}\PY{p}{]} \PY{o}{=} \PY{n}{N}\PY{n+nd}{@P0}
+    \PY{n}{P0\PYZus{}a}\PY{p}{[}\PY{n}{pF}\PY{p}{:}\PY{p}{,}\PY{p}{:}\PY{n}{pF}\PY{p}{]} \PY{o}{=} \PY{n}{P0}\PY{n+nd}{@N}\PY{o}{.}\PY{n}{T}
+    \PY{n}{P0\PYZus{}a}\PY{p}{[}\PY{n}{pF}\PY{p}{:}\PY{p}{,}\PY{n}{pF}\PY{p}{:}\PY{p}{]} \PY{o}{=} \PY{n}{P0}
+    
+    \PY{k}{return} \PY{p}{(}\PY{n}{x\PYZus{}a}\PY{p}{,} \PY{n}{K\PYZus{}a}\PY{p}{,} \PY{n}{P0\PYZus{}a}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{42}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{augmented\PYZus{}system}\PY{p}{(}\PY{n}{N}\PY{p}{,} \PY{n}{Fi}\PY{p}{,} \PY{n}{FiF}\PY{p}{,} \PY{n}{La}\PY{p}{,} \PY{n}{LaF}\PY{p}{,} \PY{n}{Ga}\PY{p}{,} \PY{n}{GaF}\PY{p}{,} \PY{n}{H}\PY{p}{,} \PY{n}{HF}\PY{p}{)}\PY{p}{:}
+    \PY{n}{pF}\PY{p}{,} \PY{n}{p} \PY{o}{=} \PY{n}{N}\PY{o}{.}\PY{n}{shape}
+    \PY{n}{pa} \PY{o}{=} \PY{n}{pF} \PY{o}{+} \PY{n}{p}
+    
+    \PY{n}{dFi} \PY{o}{=} \PY{n}{N}\PY{n+nd}{@Fi} \PY{o}{\PYZhy{}} \PY{n}{FiF}\PY{n+nd}{@N}
+    \PY{n}{dLa} \PY{o}{=} \PY{n}{N}\PY{n+nd}{@La} \PY{o}{\PYZhy{}} \PY{n}{LaF}
+    \PY{n}{dH} \PY{o}{=} \PY{n}{N}\PY{n+nd}{@H} \PY{o}{\PYZhy{}} \PY{n}{HF}\PY{n+nd}{@N}
+    
+    \PY{n}{Fi\PYZus{}a} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{pa}\PY{p}{,} \PY{n}{pa}\PY{p}{)}\PY{p}{)}
+    \PY{n}{Fi\PYZus{}a}\PY{p}{[}\PY{p}{:}\PY{n}{pF}\PY{p}{,}\PY{p}{:}\PY{n}{pF}\PY{p}{]} \PY{o}{=} \PY{n}{FiF}
+    \PY{n}{Fi\PYZus{}a}\PY{p}{[}\PY{p}{:}\PY{n}{pF}\PY{p}{,}\PY{n}{pF}\PY{p}{:}\PY{p}{]} \PY{o}{=} \PY{n}{dFi}
+    \PY{n}{Fi\PYZus{}a}\PY{p}{[}\PY{n}{pF}\PY{p}{:}\PY{p}{,}\PY{n}{pF}\PY{p}{:}\PY{p}{]} \PY{o}{=} \PY{n}{Fi}
+    
+    \PY{n}{La\PYZus{}a} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{pa}\PY{p}{,} \PY{n}{p}\PY{p}{)}\PY{p}{)}
+    \PY{n}{La\PYZus{}a}\PY{p}{[}\PY{p}{:}\PY{n}{pF}\PY{p}{]} \PY{o}{=} \PY{n}{dLa}
+    \PY{n}{La\PYZus{}a}\PY{p}{[}\PY{n}{pF}\PY{p}{:}\PY{p}{]} \PY{o}{=} \PY{n}{La}
+    
+    \PY{n}{Ga\PYZus{}a} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{pa}\PY{p}{,} \PY{n}{p}\PY{p}{)}\PY{p}{)}
+    \PY{n}{Ga\PYZus{}a}\PY{p}{[}\PY{p}{:}\PY{n}{pF}\PY{p}{]} \PY{o}{=} \PY{n}{N}\PY{n+nd}{@Ga}
+    \PY{n}{Ga\PYZus{}a}\PY{p}{[}\PY{n}{pF}\PY{p}{:}\PY{p}{]} \PY{o}{=} \PY{n}{Ga}
+    
+    \PY{n}{H\PYZus{}a} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{n}{pF}\PY{p}{,} \PY{n}{pa}\PY{p}{)}\PY{p}{)}
+    \PY{n}{H\PYZus{}a}\PY{p}{[}\PY{p}{:}\PY{n}{pF}\PY{p}{,}\PY{p}{:}\PY{n}{pF}\PY{p}{]} \PY{o}{=} \PY{n}{HF}
+    \PY{n}{H\PYZus{}a}\PY{p}{[}\PY{p}{:}\PY{n}{pF}\PY{p}{,}\PY{n}{pF}\PY{p}{:}\PY{p}{]} \PY{o}{=} \PY{n}{dH}
+    
+    \PY{k}{return} \PY{p}{(}\PY{n}{Fi\PYZus{}a}\PY{p}{,} \PY{n}{La\PYZus{}a}\PY{p}{,} \PY{n}{Ga\PYZus{}a}\PY{p}{,} \PY{n}{H\PYZus{}a}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    As we did in part 6, we can pre-calculate the Kalman gains to be used in
+the covariance analysis (we could also have used the last calculated
+gain as a fixed gain in the covariance analysis and get good results,
+but we do not do that here):
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{43}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Calculate Kalman gains using the filter model matrices}
+\PY{n}{K}\PY{p}{,} \PY{n}{\PYZus{}} \PY{o}{=} \PY{n}{kalman\PYZus{}gains}\PY{p}{(}\PY{n}{FiF}\PY{p}{,} \PY{n}{GaF}\PY{p}{,} \PY{n}{P0F}\PY{p}{,} \PY{n}{HF}\PY{p}{,} \PY{n}{RF}\PY{p}{,} \PY{n}{nm}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    We calculate the augmented system paramteters\ldots{}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{44}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{p}{(}\PY{n}{x\PYZus{}a}\PY{p}{,} \PY{n}{K\PYZus{}a}\PY{p}{,} \PY{n}{P0\PYZus{}a}\PY{p}{)} \PY{o}{=} \PY{n}{augmented\PYZus{}state}\PY{p}{(}\PY{n}{N}\PY{p}{,} \PY{n}{e\PYZus{}hat}\PY{p}{[}\PY{p}{:}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,} \PY{n}{xm}\PY{p}{,} \PY{n}{K}\PY{p}{,} \PY{n}{P0}\PY{p}{)}
+\PY{p}{(}\PY{n}{Fi\PYZus{}a}\PY{p}{,} \PY{n}{La\PYZus{}a}\PY{p}{,} \PY{n}{Ga\PYZus{}a}\PY{p}{,} \PY{n}{H\PYZus{}a}\PY{p}{)} \PY{o}{=} \PY{n}{augmented\PYZus{}system}\PY{p}{(}\PY{n}{N}\PY{p}{,} \PY{n}{Fi}\PY{p}{,} \PY{n}{FiF}\PY{p}{,} \PY{n}{La}\PY{p}{,} \PY{n}{LaF}\PY{p}{,} \PY{n}{Ga}\PY{p}{,} \PY{n}{GaF}\PY{p}{,} \PY{n}{H}\PY{p}{,} \PY{n}{HF}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \ldots{} and run the analysis:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{45}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{p\PYZus{}a} \PY{o}{=} \PY{n}{covar\PYZus{}analysis}\PY{p}{(}\PY{n}{Fi\PYZus{}a}\PY{p}{,} \PY{n}{Ga\PYZus{}a}\PY{p}{,} \PY{n}{P0\PYZus{}a}\PY{p}{,} \PY{n}{H\PYZus{}a}\PY{p}{,} \PY{n}{RF}\PY{p}{,} \PY{n}{K\PYZus{}a}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    Before we plot the results, we also run a Monte Carlo simulation, to
+measure the results against the \emph{ground truth}:
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{46}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} Monte Carlo of suboptimal Kalman filter}
+\PY{n}{runs} \PY{o}{=} \PY{l+m+mi}{1000}
+\PY{n}{X\PYZus{}bar}\PY{p}{,} \PY{n}{X\PYZus{}hat}\PY{p}{,} \PY{n}{E\PYZus{}bar}\PY{p}{,} \PY{n}{E\PYZus{}hat} \PY{o}{=} \PY{n+nb}{list}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{n+nb}{list}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{n+nb}{list}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{n+nb}{list}\PY{p}{(}\PY{p}{)}
+\PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{tqdm}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{n}{runs}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} New stochasitic process simulation}
+    \PY{n}{v} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{,}\PY{n}{n}\PY{p}{)}\PY{p}{)}
+    \PY{n}{v}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{randn}\PY{p}{(}\PY{n}{n}\PY{p}{)}
+    \PY{n}{xs} \PY{o}{=} \PY{n}{run\PYZus{}stochastic}\PY{p}{(}\PY{n}{u}\PY{p}{,} \PY{n}{v}\PY{p}{,} \PY{n}{FiS}\PY{p}{,} \PY{n}{LaS}\PY{p}{,} \PY{n}{GaS}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Take measurements}
+    \PY{n}{xm} \PY{o}{=} \PY{n}{xs}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{p}{:}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{:}\PY{n}{mi}\PY{p}{]}
+    \PY{n}{w} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{p}{(}\PY{l+m+mi}{3}\PY{p}{,}\PY{n}{nm}\PY{p}{)}\PY{p}{)}
+    \PY{n}{w}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{random}\PY{o}{.}\PY{n}{randn}\PY{p}{(}\PY{n}{nm}\PY{p}{)}
+    \PY{n}{z} \PY{o}{=} \PY{n}{H}\PY{n+nd}{@xm} \PY{o}{+} \PY{n}{w}
+
+    \PY{c+c1}{\PYZsh{} Kalman filter}
+    \PY{p}{(}\PY{n}{x\PYZus{}bar}\PY{p}{,} \PY{n}{x\PYZus{}hat}\PY{p}{,} \PY{n}{p\PYZus{}bar}\PY{p}{,} \PY{n}{p\PYZus{}hat}\PY{p}{)} \PY{o}{=} \PY{n}{kalman\PYZus{}filter}\PY{p}{(}\PY{n}{z}\PY{p}{,} \PY{n}{u}\PY{p}{,} \PY{n}{FiF}\PY{p}{,} \PY{n}{LaF}\PY{p}{,} \PY{n}{GaF}\PY{p}{,} \PY{n}{P0F}\PY{p}{,} \PY{n}{HF}\PY{p}{,} \PY{n}{RF}\PY{p}{,} \PY{n}{mi}\PY{p}{,} \PY{n}{N}\PY{o}{=}\PY{n}{N}\PY{p}{)}
+    \PY{n}{X\PYZus{}bar}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{x\PYZus{}bar}\PY{p}{)}
+    \PY{n}{X\PYZus{}hat}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{x\PYZus{}hat}\PY{p}{)}
+    \PY{n}{E\PYZus{}bar}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{xs}\PY{p}{[}\PY{p}{:}\PY{l+m+mi}{2}\PY{p}{]}\PY{o}{\PYZhy{}}\PY{n}{x\PYZus{}bar}\PY{p}{)}
+    \PY{n}{E\PYZus{}hat}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{xm}\PY{p}{[}\PY{p}{:}\PY{l+m+mi}{2}\PY{p}{]}\PY{o}{\PYZhy{}}\PY{n}{x\PYZus{}hat}\PY{p}{)}
+
+\PY{n}{X\PYZus{}bar} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{concatenate}\PY{p}{(}\PY{n}{X\PYZus{}bar}\PY{p}{)}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n}{runs}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}
+\PY{n}{X\PYZus{}hat} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{concatenate}\PY{p}{(}\PY{n}{X\PYZus{}hat}\PY{p}{)}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n}{runs}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}
+\PY{n}{E\PYZus{}bar} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{concatenate}\PY{p}{(}\PY{n}{E\PYZus{}bar}\PY{p}{)}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n}{runs}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}
+\PY{n}{E\PYZus{}hat} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{concatenate}\PY{p}{(}\PY{n}{E\PYZus{}hat}\PY{p}{)}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n}{runs}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{,}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+100\%|||||||||||| 1000/1000 [03:09<00:00,  5.29it/s]
+    \end{Verbatim}
+
+    We see the results below. The general conclusions are that the
+covariance analysis results for the suboptimal Kalman filter cannot be
+trusted; the standard deviations
+\(\hat{\sigma}_1^{*}, \hat{\sigma}_2^{*}\) are even lower than the
+optimal, which corresponds neither to what we saw above, nor to what we
+would expect. Further, we see that the \emph{true} position result
+\(\hat{\sigma}_1^{(e)}\) lies quite a bit above the optimal,
+\(\hat{\sigma}_1^{(o)}\), while the Monte Carlo result standard
+deviation, \(\hat{p}_1^{1/2}\), follows a similar trajectory as
+\(\hat{\sigma}_1^{(e)}\), but with a gap. We see a similar, but maller,
+gap between the true and Monte Carlo results for velocity, as well. This
+corresponds to what we found for the Monte Carlo simulation of the
+optimal Kalman filter in part 5.
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_103_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}
